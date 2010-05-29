@@ -15,7 +15,6 @@ class CockProc(Process):
         result = self.process.before + self.process.after + " "
         conn.send(result)
 
-
 here, there = Pipe(duplex=True)
 
 proc = CockProc()
