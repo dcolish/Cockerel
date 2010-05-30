@@ -63,12 +63,6 @@ Ltac Universal_Intros :=
    | _ => idtac
    end.
 
-Ltac Prop_Intros :=
-  match goal with 
-    | [ |- _ -> _] => intro; Prop_Intros
-    | _ => idtac
-  end.
-
 Ltac Solve_With H :=
   (* I'm not sure this is a tactic that should be pushed up *)
   apply H || fail "The hypothesis entered does not exist".
@@ -94,6 +88,7 @@ Ltac P_with_CP :=
    match goal with
    | [ |- ?a /\ ?b -> ?c ] => intros [H tmp]; generalize tmp; clear tmp
    | [ |- ?a       -> ?c ] => intro H
+   | [ |- ~?a -> _ ] => intro H
    | _ => idtac "[appropriate error message]"
    end.
 
@@ -120,10 +115,10 @@ Ltac DS D N :=
          match type of D with
            | ?A \/ ?B =>
              match A with
-               | A'  => idtac "Using ~"A' "to prove" B; assert(H:B); [tauto | assumption]
+               | A'  => idtac "Using ~"A' "to prove" B; assert(H:B); [tauto | try assumption]
              end ||
              match B with 
-               | A' => idtac "Using ~"A' "to prove" A; assert (H:A); [tauto | assumption]
+               | A' => idtac "Using ~"A' "to prove" A; assert (H:A); [tauto | try assumption]
              end ||
              idtac "1: This failed"
            | ?T => idtac "The justification" T "is expected to be a disjunction: _ \/ _"
@@ -132,10 +127,10 @@ Ltac DS D N :=
          match type of D with
            | ?A \/ ?B =>
              match A with
-               | ~A'  => idtac "Using" A' "to prove" B; assert(H:B); [tauto | assumption]
+               | ~A'  => idtac "Using" A' "to prove" B; assert(H:B); [tauto | try assumption]
              end ||
              match B with 
-               | ~A' => idtac "Using" A' "to prove" A; assert (H:A); [tauto | assumption]
+               | ~A' => idtac "Using" A' "to prove" A; assert (H:A); [tauto | try assumption]
              end ||
              idtac "2: This failed"
            | ?T => idtac "The justification" T "is expected to be a disjunction: _ \/ _"
@@ -143,62 +138,50 @@ Ltac DS D N :=
      end.
 
 Example ds_unit_1 P Q:  (P\/Q) -> (~P->Q). 
-Prop_Intros. DS H H1. Qed.
+P_with_CP. P_with_CP. DS H1 H2. Qed.
 
 Example ds_unit_2 P Q:  (~P\/Q) -> (P->Q). 
-Prop_Intros. DS H H1. Qed.
+P_with_CP. P_with_CP. DS H1 H2. Qed.
 
 Example ds_unit_3 P Q:  (P\/Q) -> (~Q -> P). 
-Prop_Intros. DS H H1. Qed.
+P_with_CP. P_with_CP. DS H1 H2. Qed.
 
 Example ds_unit_4 P Q:  (P\/~Q) -> (Q -> P). 
-Prop_Intros. DS H H1. Qed.
+P_with_CP. P_with_CP. DS H1 H2. Qed.
+
 
 Ltac Pose D For N :=
   match D with
     | ~N =>
       destruct(excluded_middle N); try assumption
     | ~D => idtac "You cannot pose that" D
-    | _ => idtac "Not matching"
+    | _ => idtac "Not matching" D N
   end.
 
+
+
+(*
+
+    | ?A \/ ?B =>
+      match type of N with 
+        | ?P \/ ?Q =>
+          destruct(excluded_middle P); [right; apply H; assumption | left; assumption]
+      end
+*)
+
 Ltac Contr A B:= 
-  try (apply A in B; contradiction) || idtac "No such contradiction found in the current proof".
+  try apply A in B; contradiction || apply B in A; contradiction ||
+    idtac "No such contradiction found in the current proof".
 
-Example ex_mid P : (~~P) -> P. 
-Prop_Intros.
-Pose (~P) For P.
-Contr H H1.
-Qed.
 
-Example p438_6_28 : forall (P Q: Prop), (P -> Q) <-> (~ P \/ Q). 
-Split_Eq. 
-Prop_Intros.
-destruct (excluded_middle P); [right; apply H; assumption | left; assumption].
-Prop_Intros. 
-DS H H1.
-Qed.
 
 Ltac bwd_Add := left.
+Ltac fwd_Add := right.
 
-Ltac Add H A :=
+Ltac add H A :=
    let H' := fresh "H0" in
    let B := type of H in
    assert (H' : A \/ B); [ right; assumption | ].
-
-(*
-Lemma p375_6_9 A B C D: ((A \/ B) -> (B /\ C)) -> (B -> C) \/ D.
-P_with_CP.
-bwd_Add.
-P_with_CP.
-destruct H1.
-right. assumption. assumption.
-Add H2 A.
-MP H1 H3.
-Simp_right H4. (* Simp alone is too vague *)
-Qed.
-*)
-
 
 Ltac MP f x :=
    let H := fresh "H0" in
@@ -213,3 +196,45 @@ Ltac Simp_right C :=
    | _ => idtac "[insert appropriate error message]"
    end.
 
+Example ex_6_19 P : (~~P) <-> P. 
+P_with_CP.
+Split_Eq.
+  P_with_CP.
+  Pose (~P) For P.
+  Contr H1 H.
+  P_with_CP.
+  Pose (~~P) For (~P).
+  Contr H1 H.
+Qed.
+
+
+Lemma p374_6_8 A B C: (A \/ B) /\ (A \/ C) /\ ~A -> B /\ C.
+P_with_CP.
+P_with_CP.
+P_with_CP.
+DS H1 H3.
+DS H2 H3.
+Conj H4 H5.
+Qed.
+
+
+Lemma p375_6_9 A B C D: ((A \/ B) -> (B /\ C)) -> ((B -> C) \/ D).
+P_with_CP.
+bwd_Add.
+P_with_CP.
+add H2 A.
+MP H1 H3.
+Simp_right H4. (* Simp alone is too vague *)
+Qed.
+
+
+Lemma ex_6_28 P Q: (~P\/Q) <-> (P -> Q).
+Universal_Intros.
+Split_Eq.
+P_with_CP.
+P_with_CP.
+DS H1 H2.
+P_with_CP.
+(* XXX: will need to create a tactic for this *)
+destruct (excluded_middle P); [right; apply H1 | left]; assumption.  
+Qed.
