@@ -51,10 +51,10 @@ Related work.
 
 Require Import Classical.
 
+Notation "A -> B" := (A->B) (at level 84, no associativity).
 
+Axiom excluded_middle: forall P:Prop, P \/ ~P.
 Axiom H0 : Prop.
-Variable P Q : Prop.
-
 
 Ltac Universal_Intros :=
    (* Todo: insert a call to this macro into every tactic accessible by the student *)
@@ -63,28 +63,29 @@ Ltac Universal_Intros :=
    | _ => idtac
    end.
 
-  Ltac Solve_With_Double_Negation :=
-    Universal_Intros;
-    let H := fresh "H0" in
-    match goal with
-    | [ |- ~ ?a <> ?a ] => intros H; apply H ; reflexivity
-    | [ |- ?T ] => idtac "Double Negation could not be applied to" T
-    end.
+Ltac Prop_Intros :=
+  match goal with 
+    | [ |- _ -> _] => intro; Prop_Intros
+    | _ => idtac
+  end.
 
-  Ltac Apply_Double_Negation D :=
-    Universal_Intros;
-    let H := fresh "H0" in
-    match D with
-    | ~~ ?A => apply NNPP in H
-    | ?T => idtac "Double Negation could not be applied to" T
-    end.
+Ltac Solve_With H :=
+  (* I'm not sure this is a tactic that should be pushed up *)
+  apply H || fail "The hypothesis entered does not exist".
 
 
+Ltac DN :=
+  Universal_Intros;
+  let H := fresh "H0" in 
+  let H1 := fresh "H0" in
+  match goal with
+    | [|- ~~ _ -> _ ] => intros H; apply NNPP in H; try assumption
+    | [|- _ -> ~~ _ ] => intros H H1; apply H1; try assumption
+    | _ => idtac "Double Negation can not solve this problem"
+end.
 
-  Example Simple_Neg : ~~P = P. Solve_With_Double_Negation. Qed.
-  
-  Example More_Neg : ~~ (P /\ Q) -> P /\ Q. intro. Apply_Double_Negation H.
-  
+Example More_Neg1 P Q:  ~~ (P /\ Q) -> P /\ Q. DN. Qed.
+Example More_Neg2 : forall P:Prop, P -> (~~ P). DN. Qed.
 
 Ltac P_with_CP :=
    Universal_Intros;
@@ -106,26 +107,98 @@ Ltac Conj L R :=
    .
 
 
+Example or_swaps P Q :(P \/ Q) <-> (Q \/ P). 
+  split; intro; destruct H; [right | left | right | left]; assumption. Qed.
+
+Ltac Split_Eq :=
+  split || fail "This statement cannot be split into cases".
+
 Ltac DS D N :=
    let H := fresh "H0" in
-   match type of D with
-   | ?A \/ ?B =>
-      match type of N with
-      | ~ A => idtac
-              ; assert (H:B)
-              ; [tauto | try assumption ]
-      | ~ ?A' => idtac "[insert appropriate error message]"
-      | ?T => idtac "The justification" N "proves" T "but is expected to be a negation: ~ _ "
-      end
-   | ?T => idtac "The justification" D "proves" T ", but is expected to be a disjunction: _ \/ _"
-   end.
+     match type of N with
+       | ~ ?A' =>
+         match type of D with
+           | ?A \/ ?B =>
+             match A with
+               | A'  => idtac "Using ~"A' "to prove" B; assert(H:B); [tauto | assumption]
+             end ||
+             match B with 
+               | A' => idtac "Using ~"A' "to prove" A; assert (H:A); [tauto | assumption]
+             end ||
+             idtac "1: This failed"
+           | ?T => idtac "The justification" T "is expected to be a disjunction: _ \/ _"
+         end
+       | ?A' =>
+         match type of D with
+           | ?A \/ ?B =>
+             match A with
+               | ~A'  => idtac "Using" A' "to prove" B; assert(H:B); [tauto | assumption]
+             end ||
+             match B with 
+               | ~A' => idtac "Using" A' "to prove" A; assert (H:A); [tauto | assumption]
+             end ||
+             idtac "2: This failed"
+           | ?T => idtac "The justification" T "is expected to be a disjunction: _ \/ _"
+         end
+     end.
+
+Example ds_unit_1 P Q:  (P\/Q) -> (~P->Q). 
+Prop_Intros. DS H H1. Qed.
+
+Example ds_unit_2 P Q:  (~P\/Q) -> (P->Q). 
+Prop_Intros. DS H H1. Qed.
+
+Example ds_unit_3 P Q:  (P\/Q) -> (~Q -> P). 
+Prop_Intros. DS H H1. Qed.
+
+Example ds_unit_4 P Q:  (P\/~Q) -> (Q -> P). 
+Prop_Intros. DS H H1. Qed.
+
+Ltac Pose D For N :=
+  match D with
+    | ~N =>
+      destruct(excluded_middle N); try assumption
+    | ~D => idtac "You cannot pose that" D
+    | _ => idtac "Not matching"
+  end.
+
+Ltac Contr A B:= 
+  try (apply A in B; contradiction) || idtac "No such contradiction found in the current proof".
+
+Example ex_mid P : (~~P) -> P. 
+Prop_Intros.
+Pose (~P) For P.
+Contr H H1.
+Qed.
+
+Example p438_6_28 : forall (P Q: Prop), (P -> Q) <-> (~ P \/ Q). 
+Split_Eq. 
+Prop_Intros.
+destruct (excluded_middle P); [right; apply H; assumption | left; assumption].
+Prop_Intros. 
+DS H H1.
+Qed.
 
 Ltac bwd_Add := left.
 
-Ltac add H A :=
+Ltac Add H A :=
    let H' := fresh "H0" in
    let B := type of H in
    assert (H' : A \/ B); [ right; assumption | ].
+
+(*
+Lemma p375_6_9 A B C D: ((A \/ B) -> (B /\ C)) -> (B -> C) \/ D.
+P_with_CP.
+bwd_Add.
+P_with_CP.
+destruct H1.
+right. assumption. assumption.
+Add H2 A.
+MP H1 H3.
+Simp_right H4. (* Simp alone is too vague *)
+Qed.
+*)
+
 
 Ltac MP f x :=
    let H := fresh "H0" in
