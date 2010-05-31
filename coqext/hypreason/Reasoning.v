@@ -63,23 +63,12 @@ Ltac Universal_Intros :=
    | _ => idtac
    end.
 
+Ltac IP := assumption.
+
 Ltac Solve_With H :=
   (* I'm not sure this is a tactic that should be pushed up *)
   apply H || fail "The hypothesis entered does not exist".
 
-
-Ltac DN :=
-  Universal_Intros;
-  let H := fresh "H0" in 
-  let H1 := fresh "H0" in
-  match goal with
-    | [|- ~~ _ -> _ ] => intros H; apply NNPP in H; try assumption
-    | [|- _ -> ~~ _ ] => intros H H1; apply H1; try assumption
-    | _ => idtac "Double Negation can not solve this problem"
-end.
-
-Example More_Neg1 P Q:  ~~ (P /\ Q) -> P /\ Q. DN. Qed.
-Example More_Neg2 : forall P:Prop, P -> (~~ P). DN. Qed.
 
 Ltac P_with_CP :=
    Universal_Intros;
@@ -153,35 +142,42 @@ P_with_CP. P_with_CP. DS H1 H2. Qed.
 Ltac Pose D For N :=
   match D with
     | ~N =>
-      destruct(excluded_middle N); try assumption
+      destruct(excluded_middle N); [try right; try assumption |]
     | ~D => idtac "You cannot pose that" D
     | _ => idtac "Not matching" D N
   end.
-
-
-
-(*
-
-    | ?A \/ ?B =>
-      match type of N with 
-        | ?P \/ ?Q =>
-          destruct(excluded_middle P); [right; apply H; assumption | left; assumption]
-      end
-*)
 
 Ltac Contr A B:= 
   try apply A in B; contradiction || apply B in A; contradiction ||
     idtac "No such contradiction found in the current proof".
 
 
+Ltac DN H :=
+  Universal_Intros;
+  let H1 := fresh "H0" in
+  match type of H with
+    | ?A' => 
+      match A' with
+        | ~~_ => apply NNPP in H; try assumption
+      end
+    (* | H => intros H1; apply H1; try assumption *)
+    | _ => idtac "Double Negation can not solve this problem" H
+end.
+
 
 Ltac bwd_Add := left.
 Ltac fwd_Add := right.
 
-Ltac add H A :=
+Ltac add1 H B :=
    let H' := fresh "H0" in
-   let B := type of H in
-   assert (H' : A \/ B); [ right; assumption | ].
+   let A := type of H in
+   assert (H' : A \/ B); [ left; try assumption | ].
+
+Ltac add2 H B :=
+   let H' := fresh "H0" in
+   let A := type of H in
+   assert (H' : B \/ A); [ right; try assumption | ].
+
 
 Ltac MP f x :=
    let H := fresh "H0" in
@@ -196,7 +192,17 @@ Ltac Simp_right C :=
    | _ => idtac "[insert appropriate error message]"
    end.
 
-Example ex_6_19 P : (~~P) <-> P. 
+Lemma MT (A B:Prop): (A -> B) -> (~B -> ~A).  
+  Universal_Intros.
+  P_with_CP.
+  P_with_CP.
+  Pose(~~A) For (~A). 
+  DN H.
+  MP H1 H.
+  Contr H2 H3.
+  Qed.
+
+Lemma ex_6_19 P : (~~P) <-> P. 
 P_with_CP.
 Split_Eq.
   P_with_CP.
@@ -205,8 +211,25 @@ Split_Eq.
   P_with_CP.
   Pose (~~P) For (~P).
   Contr H1 H.
+  IP.
 Qed.
 
+Lemma ex_6_20 A B: (A \/ B) -> (~B -> A).
+P_with_CP.
+P_with_CP.
+Pose (~A) For A.
+DS H1 H.
+Contr H2 H3.
+Qed.
+
+Lemma ex_6_21 (A B: Prop): A -> (B\/A).
+P_with_CP.
+add1 H1 B.
+Pose (~A) For (A). 
+DS H2 H.
+add1 H3 A.
+IP.
+Qed.
 
 Lemma p374_6_8 A B C: (A \/ B) /\ (A \/ C) /\ ~A -> B /\ C.
 P_with_CP.
@@ -222,7 +245,7 @@ Lemma p375_6_9 A B C D: ((A \/ B) -> (B /\ C)) -> ((B -> C) \/ D).
 P_with_CP.
 bwd_Add.
 P_with_CP.
-add H2 A.
+add2 H2 A.
 MP H1 H3.
 Simp_right H4. (* Simp alone is too vague *)
 Qed.
@@ -235,6 +258,13 @@ P_with_CP.
 P_with_CP.
 DS H1 H2.
 P_with_CP.
-(* XXX: will need to create a tactic for this *)
-destruct (excluded_middle P); [right; apply H1 | left]; assumption.  
+(* Here is where the book starts to get it wrong, I have patched below*)
+(* Pose(~(~P\/Q)) For (~P\/Q). *)
+(* Pose (~P) For P. *)
+(* DS H H2. *)
+Pose (~P) For P.
+MP H1 H.
+IP.
+bwd_Add.
+IP.
 Qed.
