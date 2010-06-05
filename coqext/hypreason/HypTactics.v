@@ -54,6 +54,9 @@ Require Import Classical.
 Notation "A -> B" := (A->B) (at level 84, no associativity).
 
 Axiom excluded_middle: forall P:Prop, P \/ ~P.
+Axiom ID : forall P:Prop, (~P -> False) -> P.
+
+(* This axiom does not export correctly *)
 Axiom H0 : Prop.
 
 Ltac Universal_Intros :=
@@ -63,12 +66,13 @@ Ltac Universal_Intros :=
    | _ => idtac
    end.
 
-Ltac IP := assumption.
+Ltac IP := 
+  let H := fresh "H0" in 
+  apply ID; intro H || idtac "Indirect Proof cannot solve this system".
 
 Ltac Solve_With H :=
   (* I'm not sure this is a tactic that should be pushed up *)
   apply H || fail "The hypothesis entered does not exist".
-
 
 Ltac P_with_CP :=
    Universal_Intros;
@@ -89,7 +93,6 @@ Ltac Conj L R :=
    assert (H: TL /\ TR)
    ; [ apply conj; assumption | try assumption ]
    .
-
 
 Example or_swaps P Q :(P \/ Q) <-> (Q \/ P). 
   split; intro; destruct H; [right | left | right | left]; assumption. Qed.
@@ -150,7 +153,8 @@ Ltac Pose D For N :=
       end.
 
 Ltac Contr A B:= 
-  try apply A in B; contradiction || apply B in A; contradiction ||
+  try intro;
+  apply A in B; contradiction || apply B in A; contradiction ||
     idtac "No such contradiction found in the current proof".
 
 
@@ -204,3 +208,4 @@ Ltac MT H N :=
           end
         | ?T => idtac T "was expected to be an implication" 
       end.
+

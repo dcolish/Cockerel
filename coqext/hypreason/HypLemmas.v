@@ -2,45 +2,57 @@
    There will eventually be a tactic to apply these 
    during the proof process *)
 
-Require Import Tactics.
+Require Export HypTactics.
+
+Axiom H0 : Prop.
+
+(* Ltac Parse_Step A B := *)
+(*   match goal with  *)
+(*     | [|- A ] =>  assert(A); [B |tauto] *)
+(*     | ?T => idtac "You must state a valid goal to make progress," A "is not valid" *)
+(*   end. *)
+
+(* a tactic sort of like this should work well to push through 
+   any asserts we need for the forward style *)
+Tactic Notation "Write" constr(A) "Using" tactic(B) := 
+  assert (A); [B | tauto].
 
 Lemma ex_6_19 P : (~~P) <-> P. 
 Universal_Intros.
 Split_Eq.
   P_with_CP.
-  Pose (~P) For P.
-  Contr H1 H.
+  Write P Using IP.
+  Write False Using (Contr H1 H2).
   P_with_CP.
-  Pose (~~P) For (~P).
-  Contr H1 H.
-  IP.
+  Write (~~P) Using (Contr H H1).
 Qed.
 
 Lemma ex_6_20 A B: (A \/ B) -> (~B -> A).
 P_with_CP.
 P_with_CP.
-Pose (~A) For A.
-DS H1 H4.
-Contr H2 H3.
+Write A Using IP.
+(* Write B Using (DS H1 H2). *)
+assert (H4:B); [DS H1 H3 |].
+Write False Using Contr H2 H4.
 Qed.
 
 Lemma ex_6_21 (A B: Prop): A -> (B\/A).
 P_with_CP.
 add1 H1 B.
-Pose (~A) For (A). 
-DS H2 H4.
-add1 H3 A.
+fwd_Add.
 IP.
+DS H2 H3.
+Contr H3 H1.
 Qed.
 
 Lemma ex_6_22 (A B:Prop): (A -> B) -> (~B -> ~A).  
   Universal_Intros.
   P_with_CP.
   P_with_CP.
-  Pose(~~A) For (~A). 
-  DN H4.
-  MP H1 H4.
-  Contr H2 H3.
+  IP.
+  DN H3.
+  MP H1 H3.
+  Contr H2 H4.
 Qed.
 
 Lemma ex_6_23 (A B C:Prop): (A\/B) -> ((A -> C) -> ((B -> C) -> C)).
@@ -48,11 +60,11 @@ Universal_Intros.
 P_with_CP.
 P_with_CP.
 P_with_CP.
-Pose (~C) For (C).
-MT H2 H5.
-DS H1 H5. 
-MP H3 H4. 
 IP.
+MT H3 H4.
+DS H1 H4. 
+MP H2 H5. 
+apply H4.
 Qed.
 
 Lemma ex_6_24 (A B C: Prop) : (A -> B) -> ((B -> C) -> (A -> C)).

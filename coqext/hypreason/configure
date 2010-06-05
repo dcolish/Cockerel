@@ -1,0 +1,8 @@
+#!/bin/sh
+
+
+FILES="HypReason.v HypTactics.v HypLemmas.v"
+
+rm Makefile
+
+coq_makefile -o Makefile $FILES

@@ -1,4 +1,4 @@
-Load Hein.
+Load HypTactics.
 
 Lemma p374_6_8 A B C: (A \/ B) /\ (A \/ C) /\ ~A -> B /\ C.
 P_with_CP.
