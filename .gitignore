@@ -5,3 +5,5 @@ lib/
 *.glob
 *.vo
 *.pyc
+parsetab.py
+parser.out

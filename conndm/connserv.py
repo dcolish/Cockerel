@@ -8,6 +8,9 @@ from base import CoqProc
 
 class CoqProtocol(Protocol):
 
+    def parse(res):
+        
+
     def connectionMade(self):
         self.here, self.there = Pipe(duplex=True)
         self.proc = CoqProc()
@@ -25,6 +28,7 @@ class CoqProtocol(Protocol):
         self.proc.run(self.there)
         if self.here.poll():
             res = self.here.recv()
+            self.parse(res)
         self.transport.write(res)
 
     def connectionLost(self, reason):

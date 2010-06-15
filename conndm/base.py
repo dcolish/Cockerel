@@ -15,7 +15,6 @@ class CoqProc(Process):
 
             self.process.expect('\<\/prompt\>')
             result = self.process.before + self.process.after + " "
-
             conn.send(result)
         except EOF:
             self.process.close()
