@@ -49,24 +49,3 @@ def p_error(p):
 
 
 parser = yacc.yacc(debug=True)
-
-s = """1 subgoal  ============================  forall A : Prop, A -> ~ ~ A"""
-#s = """1 subgoal  A : Prop  H : A  ============================   ~ ~ A"""
-
-
-for x in s.splitlines():
-    if not s:
-        pass
-
-    result = parser.parse(x)
-    print result
-
-
-# while True:
-#     try:
-#         s = raw_input('calc > ')
-#     except EOFError:
-#         break
-#     if not s: continue
-#     result = parser.parse(s)
-#     print result
