@@ -1,7 +1,7 @@
 from multiprocessing import Process
 from pexpect import spawn, EOF
 
-from parser.gram import parser
+# from parser.gram import parser
 
 
 class CoqProc(Process):
@@ -18,8 +18,8 @@ class CoqProc(Process):
             self.process.expect('\<\/prompt\>')
 
             result = self.process.before + self.process.after + " "
-            result.strip()
-            result = parser.parse(result)
+            # result.strip()
+            # result = parser.parse(result)
             conn.send(result)
         except EOF:
             self.process.close()
