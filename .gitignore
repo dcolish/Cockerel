@@ -2,8 +2,10 @@
 bin/
 include/
 lib/
+lib64
 *.glob
 *.vo
 *.pyc
 parsetab.py
 parser.out
+*.v.d

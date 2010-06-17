@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Cockerel Logic Checker - {% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <div id="nav">
+      <h1>Welcome to Cockerel</h1>
+      <p>An online logic checker based on Coq</p>
+      {% block nav %}{% endblock %}
+    </div>
+    <div id="content">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <div id="footer">
+      {% block footer %}
+      {% endblock %}
+      <p>Copyright 2010 by Dan Colish</p>
+    </div>
+    
+  </body>
+</html>

@@ -60,12 +60,9 @@ Universal_Intros.
 P_with_CP.
 P_with_CP.
 P_with_CP.
-IP.
-MT H3 H4.
-DS H1 H4. 
-MP H2 H5. 
-apply H4.
-Qed.
+apply H3.
+Admitted.
+(* Qed. *)
 
 Lemma ex_6_24 (A B C: Prop) : (A -> B) -> ((B -> C) -> (A -> C)).
 Universal_Intros.
@@ -74,19 +71,23 @@ P_with_CP.
 P_with_CP.
 MP H1 H3. 
 MP H2 H4.
-IP.
+assumption.
 Qed.
 
-Lemma ex_6_25 (A B D C: Prop) : (A\/B) -> ((A -> C) -> ((B -> D) -> (C\/D))).
-  Universal_Intros.
-  P_with_CP.
-  P_with_CP.
-  P_with_CP.
-  (* We'll need a tactic to allow the reasoning by cases here *)
-  (* Pose A For (A-> (C\/D)). *)
-  destruct H1. MP H2 H. add1 H1 D. IP.
-               MP H3 H. add2 H1 C. IP.
-Qed.  
+(* Lemma ex_6_25 (A B D C: Prop) : (A\/B) -> ((A -> C) -> ((B -> D) -> (C\/D))). *)
+(*   Universal_Intros. *)
+(*   P_with_CP. *)
+(*   P_with_CP. *)
+(*   P_with_CP. *)
+(*   (* We'll need a tactic to allow the reasoning by cases here *) *)
+(*   (* Pose A For (A-> (C\/D)). *) *)
+(*   bwd_Add. *)
+(*   IP. *)
+(*   MT H2 H4. *)
+  
+(*   destruct H1. MP H2 H. add1 H1 D. IP. *)
+(*                MP H3 H. add2 H1 C. IP. *)
+(* Qed.   *)
   
 Lemma p374_6_8 A B C: (A \/ B) /\ (A \/ C) /\ ~A -> B /\ C.
 P_with_CP.
@@ -122,8 +123,8 @@ Split_Eq.
   (* Pose (~P) For P. *)
   (* DS H H2. *)
   Pose (~P) For P.
-  MP H1 H.
-  IP.
+  MP H1 H2.
+  assumption.
   bwd_Add.
-  IP.
+  assumption.
 Qed.

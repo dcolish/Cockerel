@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<form id="prover" action="/" method="POST">
+  <p>
+    <textarea id="f_prover_proofscript" name="proofscript" rows="20" cols="60">(* Begin your proof here *)
+    </textarea>
+  <br></br>
+  <input type="submit" value="Check it!"></input>
+  </p>
+</form>
+<div id="response">
+</div>
+{% endblock %}
