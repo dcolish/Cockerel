@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-<form id="prover" action="/" method="POST">
+<form id="prover" action="/?line={{lineno}}" method="POST">
   <p>
     <textarea id="f_prover_proofscript" name="proofscript" rows="20" cols="60">(* Begin your proof here *)
     </textarea>
   <br></br>
-  <input type="submit" value="Check it!"></input>
+  <input type="submit" value="Step"></input>
   </p>
 </form>
 <div id="response">
