@@ -1,0 +1,24 @@
+body {
+   width 100%;
+}
+
+#content {
+   width: 95%;
+}
+
+#prover {
+   float: left;
+   width: 45%;
+   clear: none;
+}
+
+#response {
+   float: right;
+   width: 45%;
+   clear: none;
+}
+
+#footer {
+   float: left;
+   clear: both;
+}

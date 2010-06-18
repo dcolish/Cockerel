@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<form id="prover" action="/" method="POST">
+<div id="prover">
+<form id="f_prover" action="/" method="POST">
   <p>
     <textarea id="f_prover_proofscript" name="proofscript" rows="20" cols="60">
       {{ proofscript }}
@@ -10,5 +11,8 @@
   <input type="hidden" name="line" value="{{lineno}}"></input>
   </p>
 </form>
-<code>{{ proofst }} </code>
+</div>
+<div id="response">
+<pre>{{ proofst }}</pre>
+</div>
 {% endblock %}
