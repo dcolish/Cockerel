@@ -39,30 +39,44 @@ class CoqProtocol(Protocol):
             else:
                 return False
 
+        def quit(self):
+            if self.proc.alive:
+                return self.proc.terminate(True)
+
     active_conns = {}
 
     def dataReceived(self, data):
         req_data = JSONDecoder().decode(data)
         logging.debug("Got: %s", req_data)
-        if not req_data.get('command'):
-            return JSONEncoder().encode({'userid': req_data.get('userid'),
-                                         'response': ''})
+        command = req_data.get('command')
+        userid = req_data.get('userid')
 
-        active_sess = self.active_conns.get(req_data.get('userid'))
-
-        if not active_sess:
-            userid = req_data.get('userid')
-            active_sess = self.ActiveConn(userid)
-            self.active_conns.update({active_sess.userid: active_sess})
-
-
-        if not active_sess.send(req_data.get('command')):
-            self.transport.loseConnection()
-
-
-        resp_data = JSONEncoder().encode(active_sess.read())
+        resp_data = self.process_command(userid, command)
         self.transport.write(resp_data)
         self.transport.loseConnection()
+
+    def process_command(self, userid, command):
+        if not command:
+            resp_dict = {'userid': userid,
+                         'response': ''}
+        elif 'quit' == command:
+            self.cleanup_session(userid)
+            resp_dict = {'userid': userid,
+                         'response': 'Exited'}
+        else:
+            active_sess = self.active_conns.get(userid)
+
+            if not active_sess:
+                active_sess = self.ActiveConn(userid)
+                self.active_conns.update({active_sess.userid: active_sess})
+
+            if not active_sess.send(command):
+                logging.error("Command could not be sent")
+                self.cleanup_session(userid)
+
+            resp_dict = active_sess.read()
+
+        return JSONEncoder().encode(resp_dict)
 
     def connectionLost(self, reason):
         if 'ConnectionDone' in ''.join(reason.parents):
@@ -70,6 +84,12 @@ class CoqProtocol(Protocol):
         else:
             logging.debug("Connection didn't close correctly")
             raise reason
+
+    def cleanup_session(self, userid):
+        active_sess = self.active_conns.get(userid)
+        if active_sess:
+            active_sess.quit()
+            del self.active_conns[userid]
 
 
 def main():

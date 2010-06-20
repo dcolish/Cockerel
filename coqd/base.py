@@ -28,3 +28,9 @@ class CoqProc(Process):
     @property
     def alive(self):
         return self.process.isalive()
+
+    def terminate(self, Force=False):
+        if Force:
+            return self.process.terminate(True)
+        else:
+            return self.process.terminate(True)
