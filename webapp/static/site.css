@@ -7,6 +7,7 @@ body {
 }
 
 #prover {
+   border: 1px solid black;
    float: left;
    width: 45%;
    clear: none;

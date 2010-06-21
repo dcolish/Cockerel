@@ -2,6 +2,10 @@ from json import JSONDecoder, JSONEncoder
 import logging
 from uuid import uuid4
 
+# from pygments import highlight
+# from pygments.lexers import OcamlLexer
+# from pygments.formatters import HtmlFormatter
+
 import os
 import telnetlib
 
@@ -15,10 +19,32 @@ app.secret_key = os.urandom(24)
 HOST = "localhost"
 
 
+def readscript(script):
+    '''Chew up blank lines'''
+    return [x for x in script.splitlines() if not x == '']
+
+
+def formatscript(script, slice):
+    commandlist = readscript(script)
+    processed = '\\n'.join(commandlist[:slice + 1])
+    unprocessed = '\\n'.join(commandlist[slice + 2:])
+
+    # Syntax highlighting will not work in a textarea form
+    # processed = highlight('\n'.join(commandlist[:slice + 1]),
+    #                       OcamlLexer(),
+    #                       HtmlFormatter())
+    # unprocessed = highlight('\n'.join(commandlist[slice + 2:]),
+    #                         OcamlLexer(),
+    #                         HtmlFormatter())
+
+    return processed, unprocessed, commandlist
+
+
 @app.route('/', methods=['GET', 'POST'])
 def prover():
     url_for('static', filename='site.css')
     site_css = '/static/site.css'
+
     proofst = None
     unprocessed = "(* Begin Your Proof Here *)"
     lineno = 0
@@ -27,30 +53,25 @@ def prover():
         if not session.get('id'):
             session['id'] = uuid4()
 
-        # splitlines will need to chew up blank lines
-        # so we dont get into trouble
 
         if request.form.get('clear'):
             command = 'quit'
-            processed = None
             proofscript = request.form.get('proofscript')
-            commandlist = proofscript.splitlines()
-            unprocessed = '\n'.join(commandlist)
+            processed, unprocessed, commandlist = formatscript(proofscript, 0)
+            processed = None
 
         elif request.form.get('undo'):
             lineno = int(request.form.get('line')) - 1
             proofscript = request.form.get('proofscript')
-            commandlist = proofscript.splitlines()
-            processed = '\n'.join(commandlist[:lineno + 1])
-            unprocessed = '\n'.join(commandlist[lineno + 2:])
+            processed, unprocessed, commandlist = formatscript(proofscript,
+                                                               lineno)
             command = 'Undo.'
 
         else:
             lineno = int(request.form.get('line')) + 1
             proofscript = request.form.get('proofscript')
-            commandlist = proofscript.splitlines()
-            processed = '\n'.join(commandlist[:lineno + 1])
-            unprocessed = '\n'.join(commandlist[lineno + 2:])
+            processed, unprocessed, commandlist = formatscript(proofscript,
+                                                  lineno)
             command = commandlist[lineno]
             logging.debug('Sending %d : %s', lineno, command)
 

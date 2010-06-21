@@ -1,19 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
 <div id="prover">
+
+<script type="text/javascript">
+$(document).ready(function () {
+    var editor = CodeMirror.fromTextArea("f_prover_proofscript", {
+        parserfile: "parsedummy.js",
+        path: "/static/codemirror/js/",
+        stylesheet: "/static/codemirror/css/jscolors.css",
+        tabMode: "spaces"
+    });
+
+    editor.setCode("{%- if processed -%}{{ processed|safe }}{% endif %}{%- if unprocessed -%}{{ unprocessed|safe }}{% endif %}");
+    editor.focus();
+});
+</script>
 <form id="f_prover" action="/" method="POST">
   <p>
     <textarea id="f_prover_proofscript" name="proofscript" rows="20" cols="60">
-{%- if processed -%}
-{{ processed }}
-{% endif %}
-{{ unprocessed }}
     </textarea>
-  <br></br>
-  <input type="submit" name="clear" value="Clear"></input>
-  <input type="submit" name="undo" value="Undo"></input>
-  <input type="submit" name="step" value="Step"></input>
-  <input type="hidden" name="line" value="{{lineno}}"></input>
+  <br>
+  <input type="submit" name="clear" value="Clear">
+  <input type="submit" name="undo" value="Undo">
+  <input type="submit" name="step" value="Step">
+  <input type="hidden" name="line" value="{{lineno}}">
   </p>
 </form>
 </div>
