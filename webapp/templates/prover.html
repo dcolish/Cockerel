@@ -11,8 +11,10 @@ $(document).ready(function () {
         tabMode: "spaces"
     });
 
-    editor.setCode("{%- if processed -%}{{ processed|safe }}{% endif %}{%- if unprocessed -%}{{ unprocessed|safe }}{% endif %}");
+    editor.setCode("{%- if processed -%}{{ processed|safe }}{% endif %}{%- if unprocessed -%}{{ unprocessed|safe }}{% endif %}\n\n");
+    editor.jumpToLine(editor.nthLine({{lineno}} + 2));
     editor.focus();
+
 });
 </script>
 <form id="f_prover" action="/" method="POST">

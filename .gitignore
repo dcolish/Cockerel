@@ -9,3 +9,4 @@ lib64
 parsetab.py
 parser.out
 *.v.d
+*.egg-info

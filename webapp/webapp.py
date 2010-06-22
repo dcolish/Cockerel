@@ -78,7 +78,7 @@ def prover():
         # here is where we'll pass it to coqd
         if command:
             try:
-                tn = telnetlib.Telnet(HOST, 8000)
+                tn = telnetlib.Telnet(HOST, 8001)
                 tn.write(JSONEncoder().encode(dict(userid=str(session['id']),
                                                command=command)))
 

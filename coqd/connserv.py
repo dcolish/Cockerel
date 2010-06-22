@@ -95,7 +95,7 @@ class CoqProtocol(Protocol):
 def main():
     f = Factory()
     f.protocol = CoqProtocol
-    reactor.listenTCP(8000, f)
+    reactor.listenTCP(8001, f)
     reactor.run()
 
 if __name__ == '__main__':

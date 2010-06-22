@@ -127,7 +127,8 @@ Ltac DS D N :=
              idtac "2: This failed"
            | ?T => idtac "The justification" T "is expected to be a disjunction: _ \/ _"
          end
-     end.
+     end ||
+     idtac "No such contradiction found in the current proof".
 
 Example ds_unit_1 P Q:  (P\/Q) -> (~P->Q). 
 P_with_CP. P_with_CP. DS H1 H2. Qed.

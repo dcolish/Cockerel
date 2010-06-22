@@ -15,24 +15,31 @@ Axiom H0 : Prop.
 (* a tactic sort of like this should work well to push through 
    any asserts we need for the forward style *)
 Tactic Notation "Write" constr(A) "Using" tactic(B) := 
-  assert (A); [B | tauto].
+  assert (A); [tauto | B ].
+
+Tactic Notation "For" constr(A) "Use" tactic(B) :=
+  assert (A); [B | tauto ].
+  
+
+(* add tactic for testing if a goal is trivial *)
 
 Lemma ex_6_19 P : (~~P) <-> P. 
 Universal_Intros.
 Split_Eq.
   P_with_CP.
-  Write P Using IP.
-  Write False Using (Contr H1 H2).
+  For P Use IP.
+  For False Use (Contr H1 H2).
   P_with_CP.
-  Write (~~P) Using (Contr H H1).
+  intro.
+  For False Use (Contr H H1).
 Qed.
 
 Lemma ex_6_20 A B: (A \/ B) -> (~B -> A).
 P_with_CP.
 P_with_CP.
-Write A Using IP.
-(* Write B Using (DS H1 H2). *)
-assert (H4:B); [DS H1 H3 |].
+For A Use IP.
+DS H1 H3.
+For B Use (DS H1 H3).
 Write False Using Contr H2 H4.
 Qed.
 
@@ -40,7 +47,7 @@ Lemma ex_6_21 (A B: Prop): A -> (B\/A).
 P_with_CP.
 add1 H1 B.
 fwd_Add.
-IP.
+Write A Using IP.
 DS H2 H3.
 Contr H3 H1.
 Qed.
@@ -70,8 +77,8 @@ P_with_CP.
 P_with_CP.
 P_with_CP.
 MP H1 H3. 
-MP H2 H4.
-assumption.
+Write C Using (MP H2 H4).
+Solve_With H5.
 Qed.
 
 (* Lemma ex_6_25 (A B D C: Prop) : (A\/B) -> ((A -> C) -> ((B -> D) -> (C\/D))). *)
@@ -93,7 +100,7 @@ Lemma p374_6_8 A B C: (A \/ B) /\ (A \/ C) /\ ~A -> B /\ C.
 P_with_CP.
 P_with_CP.
 P_with_CP.
-DS H1 H3.
+Write B Using (DS H1 H3).
 DS H2 H3.
 Conj H4 H5.
 Qed.
