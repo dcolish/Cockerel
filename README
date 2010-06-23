@@ -1,5 +1,43 @@
-Cockerel is a web based interactive theorem prover based on the Coq
-proof assistant. 
+1. Introduction
+----------------------------------------
+
+ Cockerel is a web based interactive theorem prover based on the Coq
+ proof assistant. 
 
 This code base will be extremely unstable over the summer. If you plan
-on using it send me a message. 
+on using it send me a message.
+
+
+2. Instructions for Installing
+----------------------------------------
+
+If you would like to run this software you must have Coq >=
+8.2pl1 installed. Please see the Coq site for installation
+details; http://coq.inria.fr
+ 
+You must also have Python >= 2.6.5 installed on your system. Please
+see the project documentation for installation details;
+http://www.python.org/download
+
+Once you have satisified these dependencies, you can continue with
+installation. I strongly recommend using the virtualenv project for
+managing the python namespace. Assuming you have a project python
+install with setuptools, you can create a new virutalenv around the
+project directory to install into. This can be done with:
+
+        virutalenv <path>/<to>/<repo>
+
+Then activate the repo and execute:
+
+        python setup.py develop
+
+which will pull in all the dependencies needed to run coqd and
+webapp.py. At this point you can being running the application by
+running
+        python webapp/webapp.py
+        
+Then start coqd in another terminal with
+        python coqd/connserv.py
+
+The Cockerel webpage will be at http://localhost:5000 by default
+

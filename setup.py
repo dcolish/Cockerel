@@ -8,6 +8,7 @@ setup(name="cockerel",
         'flask',
         'twisted',
         'pexpect',
+        'ply',
         ],
       test_require=[
         'nose == 0.11.3',
