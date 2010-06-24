@@ -82,6 +82,7 @@ Ltac P_with_CP :=
    | [ |- ?a /\ ?b -> ?c ] => intros [H tmp]; generalize tmp; clear tmp
    | [ |- ?a       -> ?c ] => intro H
    | [ |- ~?a -> _ ] => intro H
+   | [ |- ~~?a -> _ ] => intro H
    | _ => idtac "[appropriate error message]"
    end.
 
@@ -154,8 +155,7 @@ Ltac Pose D For N :=
       end.
 
 Ltac Contr A B:= 
-  try intro;
-  apply A in B; contradiction || apply B in A; contradiction ||
+  try (apply A in B; contradiction) || apply B in A; contradiction ||
     idtac "No such contradiction found in the current proof".
 
 
