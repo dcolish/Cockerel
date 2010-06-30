@@ -15,16 +15,6 @@ Axiom H0 : Prop.
 (* a tactic sort of like this should work well to push through 
    any asserts we need for the forward style *)
 
-(* This language should be used to add new hypothesis
-   without changing the goal state *)
-Tactic Notation "Write" constr(A) "Using" tactic(B) := 
-  assert (H:A); [tauto | B; clear H ].  
-
-(* This language should be used to clear or modfiy goals *)
-Tactic Notation "For" constr(A) "Use" tactic(B) :=
-  let H:= fresh "H0" in
-  assert (H:A); [B | tauto].
-
 (* add tactic for testing if a goal is trivial *)
 
 Lemma ex_6_19 P : (~~P) <-> P. 
@@ -34,7 +24,7 @@ Split_Eq.
   For P Use IP.
   For False Use (Contr H1 H2).
   P_with_CP.
-  intro H2.
+  P_with_CP.
   For False Use (Contr H1 H2).
 Qed.
 
@@ -48,8 +38,8 @@ Qed.
 
 Lemma ex_6_21 (A B: Prop): A -> (B\/A).
 P_with_CP.
-add1 H1 B.
-fwd_Add.
+Write (A\/B) Using (add1 H1 B).
+Disjunc A (B\/A).
 For A Use IP.
 Write B Using (DS H2 H3).
 For False Use (Contr H3 H1).
@@ -98,13 +88,11 @@ Lemma ex_6_25 (A B D C: Prop) : (A\/B) -> ((A -> C) -> ((B -> D) -> (C\/D))).
   P_with_CP.
   P_with_CP.
   P_with_CP.
-  (* We'll need a tactic to allow the reasoning by cases here *)
-  (* Pose A For (A-> (C\/D)). *)
   Case H1.
-  bwd_Add.
+  Disjunc C (C\/D).
   For C Use (MP H2 H4).
   Solve_With H1.
-  fwd_Add.
+  Disjunc D (C\/D).
   For D Use (MP H3 H5).
   Solve_With H1.
 Qed.
@@ -121,7 +109,7 @@ Qed.
 
 Lemma p375_6_9 A B C D: ((A \/ B) -> (B /\ C)) -> ((B -> C) \/ D).
 P_with_CP.
-bwd_Add.
+Disjunc (B->C) (B->C \/D).
 P_with_CP.
 Write (A\/B) Using (add2 H2 A).
 Write (B/\C) Using (MP H1 H3).
@@ -139,6 +127,6 @@ Split_Eq.
   Pose (~P) For P. (* Pose uses the excluded middle axiom, not IP. This might be bad later *)
   Write Q Using (MP H1 H2).
   Solve_With H3.
-  bwd_Add.
+  Disjunc (~P) (~P \/ Q).
   Solve_With H3.
 Qed.

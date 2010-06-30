@@ -20,6 +20,7 @@ tokens = ('BSLSH',
           'COLON',
           'COMMA',
           'DOT',
+          'FWDSLSH',
           'GOALINE',
           'HASH',
           'ID',
@@ -70,12 +71,12 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-
-t_BSLSH = r'/'
+t_BSLSH = r'\\'
 t_CARET = r'\^'
 t_COLON = r':'
 t_COMMA = r','
 t_DOT = r'\.'
+t_FWDSLSH = r'/'
 t_HASH = r'\#'
 t_IMPL = r'->'
 t_LARRW = r'\<'
@@ -98,15 +99,14 @@ lex.lex()
 if __name__ == '__main__':
 
     # A little unit test for the lexer
-
-    lex.input("""
+    s = """
 1 subgoal
 
   ============================
    forall A : Prop, A -> ~ ~ A
+"""
 
-<prompt>foo' < 2 |foo'| 0 < </prompt> 
-""")
+    lex.input(s)
 
     while True:
         tok = lex.token()
