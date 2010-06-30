@@ -25,9 +25,11 @@ if __name__ == '__main__':
 """,
          """
 1 subgoal
-  
+  A : Prop
+  B : Prop
+  C : Prop    
   ============================
-   forall A B C : Prop, A -> ~ ~ A \/ B > C
+   A -> ~ ~ A \/ B > C
 """)
 
     for x in s:

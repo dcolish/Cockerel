@@ -22,14 +22,23 @@ def p_subgoal(p):
 
 
 def p_hyp(p):
-    '''hyp : ID ':' TERM
-           | ID ':' expr
+    '''hyp : ID COLON PROP hyp
+           | ID COLON expr hyp
+           | ID COLON PROP
+           | ID COLON expr
            '''
-    p[0] = ' '.join((p[1], p[3]))
+    hyp = [dict(name=p[1],
+                type=p[3])]
+    if len(p) == 5:
+        p[0] = hyp + [p[4]]
+    else:
+        p[0] = dict(name=p[1],
+               type=p[3])
 
 
 def p_goal(p):
     '''goal : GOALINE quantified_expr
+            | GOALINE expr
     '''
     p[0] = p[2]
 
