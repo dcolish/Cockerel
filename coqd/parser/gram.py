@@ -29,59 +29,22 @@ def p_hyp(p):
 
 
 def p_goal(p):
-    '''goal : GOALINE expr
+    '''goal : GOALINE quantified_expr
     '''
     p[0] = p[2]
 
 
-def p_expr(p):
-    '''expr : id expr
-            | IMPL expr
-            | FWDSLSH BSLSH expr
-            | BSLSH FWDSLSH expr
-            | TILDE expr
-            | LARRW expr
-            | RARRW expr
-            | id
-            '''
-    if len(p) == 2 and p[1] is not None:
-        p[0] = str(p[1])
-    elif len(p) == 3:
-        p[0] = ' '.join((str(p[1]), str(p[2])))
-    elif len(p) == 4:
-        p[0] = ' '.join((str(p[1]), str(p[3])))
-    elif len(p) == 5:
-        p[0] = ' '.join((str(p[1]), str(p[4])))
-
-
-def p_id(p):
-    '''id : quantified_id
-          | ID'''
-    p[0] = p[1]
-
-
-def p_idlist(p):
-    '''idlist : ID idlist
-              | ID
-              '''
-    if len(p) == 3:
-        p[0] = ' '.join((str(p[1]), str(p[2])))
-    else:
-        p[0] = str(p[1])
-
-
-
-def p_quantified_id(p):
-    '''quantified_id : forall
+def p_quantified_expr(p):
+    '''quantified_expr : forall
                      | exists'''
     p[0] = p[1]
 
 
 def p_forall(p):
-    '''forall : FORALL idlist COLON ID COMMA
-              | FORALL idlist COLON PROP COMMA
+    '''forall : FORALL idlist COLON ID COMMA expr
+              | FORALL idlist COLON PROP COMMA expr
     '''
-    p[0] = ' '.join((p[1], p[2], p[4]))
+    p[0] = ' '.join((p[1], p[2], p[4], p[6]))
 
 
 def p_exists(p):
@@ -90,7 +53,44 @@ def p_exists(p):
     p[0] = ' '.join((p[1], p[2], p[4]))
 
 
+def p_expr(p):
+    '''expr : expr IMPL expr
+            | expr AND expr
+            | expr OR expr
+            | expr LARRW expr
+            | expr RARRW expr
+            | LPAREN expr RPAREN
+            | LBRKT expr RBRKT
+            | idlist
+            '''
+    if len(p) == 2 and p[1] is not None:
+        p[0] = str(p[1])
+    elif len(p) == 3:
+        p[0] = ' '.join((str(p[1]), str(p[2])))
+    elif len(p) == 4:
+        p[0] = ' '.join((str(p[1]), str(p[2]), str(p[3])))
+    elif len(p) == 5:
+        p[0] = ' '.join((str(p[1]), str(p[4])))
+
+
+def p_idlist(p):
+    '''idlist : ID idlist
+              | TILDE idlist
+              | PLING idlist
+              | ID
+              '''
+    if len(p) == 3:
+        p[0] = ' '.join((str(p[1]), str(p[2])))
+    else:
+        p[0] = str(p[1])
+
+
 def p_error(p):
-    raise TypeError("unknown text at %r" % (p.value,))
+    raise TypeError("unknown text at %r %s" % (p.value, p))
+
+precedence = (
+    ('left', 'OR', 'AND'),
+    ('left', 'IMPL', 'RARRW', 'LARRW'),
+    )
 
 parser = yacc.yacc(debug=True)

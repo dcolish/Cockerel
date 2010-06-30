@@ -1,17 +1,34 @@
 from parser.gram import parser
 
-# s = """1 subgoal  A : Prop  H : A  ============================   ~ ~ A"""
+
+def do_parse(s):
+    s = ' '.join(s.splitlines())
+    print s
+
+    result = parser.parse(s)
+    print result
 
 
-s = """
+if __name__ == '__main__':
+
+    s = ("""
 1 subgoal
   
   ============================
-   forall A : Prop, A -> ~ ~ A
-"""
+   forall A B  : Prop, (A -> (~ ~ A) \/ B)
+""",
+         """
+1 subgoal
+  
+  ============================
+   forall A B C : Prop, A -> ~ ~ A \/ B /\ C
+""",
+         """
+1 subgoal
+  
+  ============================
+   forall A B C : Prop, A -> ~ ~ A \/ B > C
+""")
 
-s = ' '.join(s.splitlines())
-print s
-
-result = parser.parse(s)
-print result
+    for x in s:
+        do_parse(x)

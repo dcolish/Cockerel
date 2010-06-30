@@ -15,12 +15,12 @@ reserved = {'Theorem': 'THEOREM',
             }
 
 
-tokens = ('BSLSH',
+tokens = ('OR',
           'CARET',
           'COLON',
           'COMMA',
           'DOT',
-          'FWDSLSH',
+          'AND',
           'GOALINE',
           'HASH',
           'ID',
@@ -71,12 +71,12 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-t_BSLSH = r'\\'
+t_OR = r'\\/'
 t_CARET = r'\^'
 t_COLON = r':'
 t_COMMA = r','
 t_DOT = r'\.'
-t_FWDSLSH = r'/'
+t_AND = r'/\\'
 t_HASH = r'\#'
 t_IMPL = r'->'
 t_LARRW = r'\<'
@@ -101,9 +101,9 @@ if __name__ == '__main__':
     # A little unit test for the lexer
     s = """
 1 subgoal
-
+  
   ============================
-   forall A : Prop, A -> ~ ~ A
+   forall A B  : Prop, A -> (~ ~ A) \/ B
 """
 
     lex.input(s)
