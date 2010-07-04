@@ -1,4 +1,9 @@
+from pprint import PrettyPrinter
+
 from parser.gram import parser
+from json import JSONEncoder
+
+pp = PrettyPrinter(indent=4)
 
 
 def do_parse(s):
@@ -6,8 +11,9 @@ def do_parse(s):
     print s
 
     result = parser.parse(s)
-    print result
-
+    pp.pprint(result)
+    foo = JSONEncoder().encode(result)
+    print foo
 
 if __name__ == '__main__':
 

@@ -1,22 +1,17 @@
 from json import JSONDecoder, JSONEncoder
 import logging
+import telnetlib
 from uuid import uuid4
 
-# from pygments import highlight
-# from pygments.lexers import OcamlLexer
-# from pygments.formatters import HtmlFormatter
+from flask import (
+    Module,
+    url_for,
+    render_template,
+    request,
+    session,
+    )
 
-import os
-import telnetlib
-
-from flask import Flask, session, render_template, request, url_for
-
-logging.basicConfig(level=logging.DEBUG)
-
-
-app = Flask(__name__)
-app.secret_key = os.urandom(24)
-HOST = "localhost"
+prover = Module(__name__)
 
 
 def readscript(script):
@@ -28,31 +23,24 @@ def formatscript(script, slice):
     commandlist = readscript(script)
     processed = '\\n'.join(commandlist[:slice + 1])
     unprocessed = '\\n'.join(commandlist[slice + 2:])
-
-    # Syntax highlighting will not work in a textarea form
-    # processed = highlight('\n'.join(commandlist[:slice + 1]),
-    #                       OcamlLexer(),
-    #                       HtmlFormatter())
-    # unprocessed = highlight('\n'.join(commandlist[slice + 2:]),
-    #                         OcamlLexer(),
-    #                         HtmlFormatter())
-
     return processed, unprocessed, commandlist
 
 
-@app.route('/', methods=['GET', 'POST'])
-def prover():
-    url_for('static', filename='site.css')
-    site_css = '/static/site.css'
+def ping_coqd():
+    pass
 
+
+@prover.route('/prover', methods=['GET', 'POST'])
+def editor():
     proofst = None
     unprocessed = "(* Begin Your Proof Here *)"
     lineno = 0
 
+    ping_coqd()
+
     if request.method == 'POST':
         if not session.get('id'):
             session['id'] = uuid4()
-
 
         if request.form.get('clear'):
             command = 'quit'
@@ -78,7 +66,7 @@ def prover():
         # here is where we'll pass it to coqd
         if command:
             try:
-                tn = telnetlib.Telnet(HOST, 8001)
+                tn = telnetlib.Telnet('localhost', 8001)
                 tn.write(JSONEncoder().encode(dict(userid=str(session['id']),
                                                command=command)))
 
@@ -88,20 +76,15 @@ def prover():
                 logging.error("Connection to coqd failed")
 
         return render_template('prover.html',
+                               prover_url=url_for('editor'),
                                processed=processed,
                                unprocessed=unprocessed,
                                proofst=proofst,
-                               site_css=site_css,
                                lineno=lineno)
     else:
         return render_template('prover.html',
+                               prover_url=url_for('editor'),
                                proofst=proofst,
                                processed=None,
                                unprocessed=unprocessed,
-                               site_css=site_css,
                                lineno=lineno)
-
-
-if __name__ == '__main__':
-    app.debug = True
-    app.run()

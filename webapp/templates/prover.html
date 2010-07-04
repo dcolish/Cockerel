@@ -8,16 +8,16 @@ $(document).ready(function () {
         parserfile: "parsedummy.js",
         path: "/static/codemirror/js/",
         stylesheet: "/static/codemirror/css/jscolors.css",
-        tabMode: "spaces"
+        tabMode: "spaces",
+        initCallback: function() { 
+            editor.setCode("{%- if processed -%}{{ processed|safe }}{% endif %}{%- if unprocessed -%}{{ unprocessed|safe }}{% endif %}\n\n");
+            editor.jumpToLine(editor.nthLine({{lineno}} + 2));
+            editor.focus();
+        }
     });
-
-    editor.setCode("{%- if processed -%}{{ processed|safe }}{% endif %}{%- if unprocessed -%}{{ unprocessed|safe }}{% endif %}\n\n");
-    editor.jumpToLine(editor.nthLine({{lineno}} + 2));
-    editor.focus();
-
 });
 </script>
-<form id="f_prover" action="/" method="POST">
+<form id="f_prover" action="{{ prover_url }}" method="POST">
   <p>
     <textarea id="f_prover_proofscript" name="proofscript" rows="20" cols="60">
     </textarea>

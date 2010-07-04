@@ -29,6 +29,7 @@ setup(name="cockerel",
       entry_points={
         'console_scripts': [
             'cockerel=webapp.webapp.py',
+            'coqd=coqd.connserv.py',
             ],
         },
 
@@ -38,8 +39,10 @@ setup(name="cockerel",
         'pexpect',
         'ply',
         ],
-
-      tests_require=[
+      develop_requires=[
+        'paver',
+        ],
+      tests_requires=[
         'nose == 0.11.3',
         ],
       )
