@@ -1,13 +1,10 @@
-from flask import Flask
-from flaskext.sqlalchemy import SQLAlchemy
 from werkzeug import generate_password_hash, check_password_hash
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-db = SQLAlchemy(app)
+from webapp import db
 
 
 class User(db.Model):
-    username = db.Column(db.String(80), unique=True)
+    __tablename__ = 'users'
+    username = db.Column(db.String(80), primary_key=True)
     pw_hash = db.Column(db.String(80))
 
     def __init__(self, username, password):

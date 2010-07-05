@@ -6,6 +6,8 @@ from flask import (
     url_for,
 )
 
+from models.schema import User
+
 admin = Module(__name__)
 
 
