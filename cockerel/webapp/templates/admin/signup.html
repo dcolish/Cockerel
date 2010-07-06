@@ -1,0 +1,11 @@
+{% import 'util/forms.html' as forms %}
+<form actions="{{ url_for('admin.signup') }}" method="POST">
+<dl>
+<dl>
+    <dt>Username</dt>
+    <dd>{{ forms.input('username') }}</dd>
+    <dt>Password</dt>
+    <dd>{{ forms.input('password', type='password') }}</dd>
+</dl>
+{{ forms.input(type='submit', value='signup') }}
+</form>

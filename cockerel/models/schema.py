@@ -15,7 +15,21 @@ class User(db.Model):
         self.pw_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.pwhash, password)
+        return check_password_hash(self.pw_hash, password)
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+class Classes(db.Model):
+    __tablename__ = 'classes'
+    id = db.Column('class_id', db.Integer, primary_key=True)
+    classname = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String)
+
+    def __init__(self, classname, description):
+        self.classname = classname
+        self.description = description
+
+    def __repr(self):
+        return '<Class %r>' % self.classname

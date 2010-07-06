@@ -13,7 +13,7 @@ from flask import (
 
 prover = Module(__name__)
 
-
+ 
 def readscript(script):
     '''Chew up blank lines'''
     return [x for x in script.splitlines() if not x == '']
@@ -21,8 +21,8 @@ def readscript(script):
 
 def formatscript(script, slice):
     commandlist = readscript(script)
-    processed = '\\n'.join(commandlist[:slice + 1])
-    unprocessed = '\\n'.join(commandlist[slice + 2:])
+    processed = '\\n'.join(commandlist[:slice])
+    unprocessed = '\\n'.join(commandlist[slice:])
     return processed, unprocessed, commandlist
 
 
@@ -35,8 +35,6 @@ def editor():
     proofst = None
     unprocessed = "(* Begin Your Proof Here *)"
     lineno = 0
-
-    ping_coqd()
 
     if request.method == 'POST':
         if not session.get('id'):
@@ -66,7 +64,7 @@ def editor():
         # here is where we'll pass it to coqd
         if command:
             try:
-                tn = telnetlib.Telnet('localhost', 8001)
+                tn = telnetlib.Telnet('localhost', 8003)
                 tn.write(JSONEncoder().encode(dict(userid=str(session['id']),
                                                command=command)))
 
@@ -75,14 +73,14 @@ def editor():
             except Exception:
                 logging.error("Connection to coqd failed")
 
-        return render_template('prover.html',
+        return render_template('prover/prover.html',
                                prover_url=url_for('editor'),
                                processed=processed,
                                unprocessed=unprocessed,
                                proofst=proofst,
                                lineno=lineno)
     else:
-        return render_template('prover.html',
+        return render_template('prover/prover.html',
                                prover_url=url_for('editor'),
                                proofst=proofst,
                                processed=None,

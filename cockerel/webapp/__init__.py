@@ -10,12 +10,13 @@ HOST = "localhost"
 app = Flask(__name__)
 db = SQLAlchemy(app)
 
-from webapp.views.admin import admin
-from webapp.views.frontend import frontend
-from webapp.views.prover import prover
-from webapp.util import register_modules
+from .views.admin import admin
+from .views.classes import classes
+from .views.frontend import frontend
+from .views.prover import prover
+from .util import register_modules
 
-register_modules(app, [admin, frontend, prover])
+register_modules(app, [admin, classes, frontend, prover])
 
 app.secret_key = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'

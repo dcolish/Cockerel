@@ -10,7 +10,7 @@ $(document).ready(function () {
         stylesheet: "/static/codemirror/css/jscolors.css",
         tabMode: "spaces",
         initCallback: function() { 
-            editor.setCode("{%- if processed -%}{{ processed|safe }}{% endif %}{%- if unprocessed -%}{{ unprocessed|safe }}{% endif %}\n\n");
+            editor.setCode("{%- if processed -%}{{ processed|safe }} \n {% endif %}{%- if unprocessed -%}{{ unprocessed|safe }}{% endif %}\n\n");
             editor.jumpToLine(editor.nthLine({{lineno}} + 2));
             editor.focus();
         }

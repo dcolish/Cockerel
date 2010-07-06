@@ -1,2 +1,5 @@
-# This runs cockerel, I wanted to do something better, but this is easier
+#!/bin/sh
 
+$(python coqd/connserv.py)
+
+$(python cockerel/runserver.py)

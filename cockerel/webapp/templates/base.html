@@ -1,4 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" >
+
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -16,13 +17,15 @@
     <div id="nav">
       <h1>Welcome to Cockerel</h1>
       <p>An online logic checker based on Coq</p>
-      {% block nav %}{% endblock %}
+      {% include "util/user_actions.html" with context %}
+    </div>
+    <div id="sidebar">
+      {% include "util/sidebar.html" with context %}
     </div>
     <div id="content">
       {% block content %}
       {% endblock %}
     </div>
-
     <div id="footer">
       {% block footer %}
       {% endblock %}

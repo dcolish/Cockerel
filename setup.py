@@ -28,20 +28,20 @@ setup(name="cockerel",
 
       entry_points={
         'console_scripts': [
-            'cockerel=webapp.webapp.py',
-            'coqd=coqd.connserv.py',
+            'cockerel=cockerel.',
+            'coqd=coqd.',
             ],
         },
 
       install_requires=[
         'flask',
+        'Flask-SQLAlchemy',
         'twisted',
         'pexpect',
         'ply',
+        'SQLAlchemy',
         ],
-      develop_requires=[
-        'paver',
-        ],
+
       tests_requires=[
         'nose == 0.11.3',
         ],

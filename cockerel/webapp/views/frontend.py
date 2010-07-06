@@ -1,9 +1,11 @@
-from flask import Module
+from flask import (
+    Module,
+    render_template,
+)
 
 frontend = Module(__name__)
 
 @frontend.route('/', methods=['GET'])
 def index():
     # TODO: what do we need on the homepage?
-    return '''
-<p>Hi luser~!</p>'''
+    return render_template("index.html")
