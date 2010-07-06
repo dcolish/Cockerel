@@ -3,7 +3,17 @@ body {
 }
 
 #content {
-   width: 95%;
+   float: left;
+   padding: 10px;
+   width: 75%;
+}
+
+#sidebar {
+   float:left;
+   padding: 10px 5px;
+   height: 100%;
+   width: 10%;
+   border-right: 2px solid black;
 }
 
 #prover {
@@ -23,3 +33,36 @@ body {
    float: left;
    clear: both;
 }
+
+#nav {
+   overflow: auto;
+   position: relative;
+   width: 100%;
+}
+
+#branding {
+   float: left;
+   margin: 10px 0 20px 0;
+}
+
+#branding h1 {
+   display: inline;
+   padding: 0;
+   margin: 0;
+}
+
+#branding p {
+   margin: 0 0 20px 5px;
+   padding: 0;
+}
+
+#useractions {
+   float: right;
+   margin: 10px 20px 0 0;
+}
+
+#useractions ul li {
+   display: inline;
+   style: none;
+}
+

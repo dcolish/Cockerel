@@ -15,14 +15,15 @@
   </head>
   <body>
     <div id="nav">
-      <h1>Welcome to Cockerel</h1>
-      <p>An online logic checker based on Coq</p>
+      <div id="branding">
+        <h1>Welcome to Cockerel</h1>
+        <p>An online logic checker based on Coq</p>
+      </div>
       {% include "util/user_actions.html" with context %}
     </div>
-    <div id="sidebar">
-      {% include "util/sidebar.html" with context %}
-    </div>
+    {% include "util/sidebar.html" with context %}
     <div id="content">
+
       {% block content %}
       {% endblock %}
     </div>
