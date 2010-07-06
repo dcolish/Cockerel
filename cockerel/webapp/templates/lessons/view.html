@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{%  block content %}
+<p>{{ lesson.lesson_name }}</p>
+<p>{{ lesson.text }}</p>
+
+<p>Offered by:</p>
+<ul>
+{% for class in lesson.classes %}
+<li><a href="{{ url_for('classes.view', class_id = class.id) }}">{{ class.classname }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

@@ -13,7 +13,6 @@ from models.schema import db, User
 admin = Module(__name__)
 
 
-
 @admin.route('/login', methods=['GET', 'POST'])
 def login():
     # simple session setting
