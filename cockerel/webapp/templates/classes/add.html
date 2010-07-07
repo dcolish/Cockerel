@@ -1,10 +1,10 @@
 {% import 'util/forms.html' as forms %}
-<form action="{{ url_for('classes.add') }}" method='POST'>
+<form action="" method='POST'>
 <dl>
   <dt>Class Name</dt>
-  <dd>{{ forms.input('classname') }}</dd>
+  <dd>{{ html.input(form['classname']) }}</dd>
   <dt>Description</dt>
-  <dd>{{ forms.textarea('description') }}</dd>
+  <dd>{{ html.textarea(form['description']) }}</dd>
 </dl>
-<p>{{ forms.input(type='submit', value='add') }}</p>
+<p>{{ html.input(type='submit', value='add') }}</p>
 </form>

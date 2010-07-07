@@ -20,10 +20,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
     pw_hash = db.Column(db.String(80))
-
-    # classes = db.relationship('Classes',
-    #                           secondary=user_classes,
-    #                           backref='users')
+    email = db.Column(db.String(80))
+    firstname = db.Column(db.String(80))
+    lastname = db.Column(db.String(80))
 
     def __init__(self, username, password):
         self.username = username

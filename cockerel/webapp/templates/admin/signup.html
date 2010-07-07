@@ -1,11 +1,14 @@
 {% import 'util/forms.html' as forms %}
-<form actions="{{ url_for('admin.signup') }}" method="POST">
+<form actions="" method="POST">
 <dl>
 <dl>
-    <dt>Username</dt>
-    <dd>{{ forms.input('username') }}</dd>
-    <dt>Password</dt>
-    <dd>{{ forms.input('password', type='password') }}</dd>
+  {% for el in form.output_schema %}
+  <dt>{{ form[el].label }}</dt>
+  <dd>{{ html.input(form[el]) }}</dd>
+  {% if form[el].errors %}
+  <dd>{{ form[el].errors }}</dd>
+  {% endif %}
+  {% endfor %}
 </dl>
-{{ forms.input(type='submit', value='signup') }}
+{{ html.input(type='submit', value='join!') }}
 </form>

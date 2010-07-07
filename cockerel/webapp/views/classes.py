@@ -6,10 +6,12 @@ from flask import (
     request,
     url_for,
     )
+from flatland.out.markup import Generator
 
 from webapp.views.util import login_required
 
 from models.schema import db, Classes
+from .forms.classes import AddClassForm
 
 classes = Module(__name__)
 
@@ -17,22 +19,29 @@ classes = Module(__name__)
 @classes.route('/classes', methods=['GET'])
 def index():
     classes = Classes.query.all()
-    return render_template("classes/index.html", classes=classes)
+    return render_template("/classes/index.html", classes=classes)
 
 
 @classes.route('/classes/add', methods=['GET', 'POST'])
 @login_required
 def add():
     if request.method == 'POST':
-        class_section = Classes(classname=request.form['classname'],
-                                description=request.form['description'],
+
+        form = AddClassForm.from_flat(request.form)
+        form.validate()
+        class_section = Classes(form['classname'].value,
+                                form['description'].value,
                                 owner=g.user)
         db.session.add(class_section)
         db.session.commit()
         return redirect(url_for('classes.view',
                         class_id=class_section.id))
 
-    return render_template('classes/add.html')
+    form = AddClassForm()
+    html = Generator()
+    return render_template('classes/add.html',
+                           form=form,
+                           html=html)
 
 
 @classes.route('/classes/register/<int:class_id>', methods=['GET'])
