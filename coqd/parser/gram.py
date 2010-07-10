@@ -1,7 +1,8 @@
 from ply import yacc
 
-import lexer
 from lexer import tokens
+
+__all__ = ['tokens', 'parser', 'precedence']
 
 
 def p_proofst(p):

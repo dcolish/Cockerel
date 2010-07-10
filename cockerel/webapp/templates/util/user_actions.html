@@ -4,6 +4,7 @@
   <li>Hi, {{ session.username }}</li>
   <li><a href="{{ url_for('admin.logout') }}">Logout</a></li>
   {% else %}
+  <li><a href="{{ url_for('admin.signup') }}">Signup</a></li>
   <li><a href="{{ url_for('admin.login') }}">Login</a></li>
   {% endif %}
   </ul>

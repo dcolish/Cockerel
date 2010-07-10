@@ -7,7 +7,7 @@ from paver.easy import *
 
 
 @task
-@needs('flesh')
+@needs('bootstrap')
 def setup():
     '''Setup the branch'''
     print "Ready to boot servers"

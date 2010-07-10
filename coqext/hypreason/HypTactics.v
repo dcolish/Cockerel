@@ -10,7 +10,13 @@ Axiom ID : forall P:Prop, (~P -> False) -> P.
 (* This axiom does not export correctly *)
 Axiom H0 : Prop.
 
-
+Ltac Universal_Intros :=
+   (* Todo: insert a call to this macro into every tactic accessible by the student *)
+   match goal with
+   | [ |- forall _:Prop, _ ] => intro; Universal_Intros
+   | _ => idtac
+   end.
+   (* || NO_INTRO. *)
 
 
 Ltac Add1 H B :=
@@ -101,7 +107,7 @@ Ltac Disjunc A B :=
 
 Ltac IP := 
   let H := fresh "H0" in 
-  apply ID; intro H || FAILED H; NO_INTRO.
+  apply ID; intro H. (* || FAILED H; NO_INTRO. *)
 
 
 Ltac MP f x :=
@@ -129,10 +135,11 @@ Ltac P_with_CP :=
    | [ |- ?a /\ ?b -> ?c ] => intros [H tmp]; generalize tmp; clear tmp
    | [ |- ?a       -> ?c ] => intro H
    | [ |- ~?a -> _ ] => intro H
-   | [ |- ~~?a -> _ ] => intro H
+   | [ |- _ -> _ ] => intro H
+   | [ |- ~~?a ] => intro H
    | _ => idtac "[appropriate error message]"
-   end
-   || FAILED H.
+   end.
+   (* || FAILED H. *)
 
 Ltac Pose D For N :=
   let H := fresh "H0" in 
@@ -159,13 +166,3 @@ Ltac Solve_With H :=
 
 Ltac Split_Eq :=
   split || idtac "Cannot Split a non conjuctive statement".
-
-
-Ltac Universal_Intros :=
-   (* Todo: insert a call to this macro into every tactic accessible by the student *)
-   match goal with
-   | [ |- forall _:Prop, _ ] => intro; Universal_Intros
-   | _ => idtac
-   end
-   || NO_INTRO.
-

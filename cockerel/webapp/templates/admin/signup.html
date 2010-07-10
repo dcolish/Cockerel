@@ -1,12 +1,14 @@
-{% import 'util/forms.html' as forms %}
 <form actions="" method="POST">
-<dl>
 <dl>
   {% for el in form.output_schema %}
   <dt>{{ form[el].label }}</dt>
+  {% if el == 'password' %}
+  <dd>{{ html.input(form[el], type='password') }}</dd>
+  {% else %}
   <dd>{{ html.input(form[el]) }}</dd>
+  {% endif %}
   {% if form[el].errors %}
-  <dd>{{ form[el].errors }}</dd>
+  <label>{{ form[el].errors }}</label>
   {% endif %}
   {% endfor %}
 </dl>

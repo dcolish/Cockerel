@@ -56,17 +56,17 @@ Require Export HypNotation.
 Require Export HypTactics.
 Require Export HypLemmas.
 
-Example or_swaps P Q :(P \/ Q) <-> (Q \/ P). 
-  split; intro; destruct H; [right | left | right | left]; assumption. Qed.
+(* Example or_swaps P Q :(P \/ Q) <-> (Q \/ P).  *)
+(*   split; intro; destruct H; [right | left | right | left]; assumption. Qed. *)
 
-Example ds_unit_1 P Q:  (P\/Q) -> (~P->Q). 
-P_with_CP. P_with_CP. DS H1 H2. Qed.
+(* Example ds_unit_1 P Q:  (P\/Q) -> (~P->Q).  *)
+(* P_with_CP. P_with_CP. DS H1 H2. Qed. *)
 
-Example ds_unit_2 P Q:  (~P\/Q) -> (P->Q). 
-P_with_CP. P_with_CP. DS H1 H2. Qed.
+(* Example ds_unit_2 P Q:  (~P\/Q) -> (P->Q).  *)
+(* P_with_CP. P_with_CP. DS H1 H2. Qed. *)
 
-Example ds_unit_3 P Q:  (P\/Q) -> (~Q -> P). 
-P_with_CP. P_with_CP. DS H1 H2. Qed.
+(* Example ds_unit_3 P Q:  (P\/Q) -> (~Q -> P).  *)
+(* P_with_CP. P_with_CP. DS H1 H2. Qed. *)
 
-Example ds_unit_4 P Q:  (P\/~Q) -> (Q -> P). 
-P_with_CP. P_with_CP. DS H1 H2. Qed.
+(* Example ds_unit_4 P Q:  (P\/~Q) -> (Q -> P).  *)
+(* P_with_CP. P_with_CP. DS H1 H2. Qed. *)

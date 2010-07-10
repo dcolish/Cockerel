@@ -2,7 +2,9 @@
    There will eventually be a tactic to apply these 
    during the proof process *)
 
-Require Export HypTactics.
+Require Import HypTactics.
+Require Import HypNotation.
+
 
 Axiom H0 : Prop.
 
@@ -38,7 +40,7 @@ Qed.
 
 Lemma ex_6_21 (A B: Prop): A -> (B\/A).
 P_with_CP.
-Write (A\/B) Using (add1 H1 B).
+Write (A\/B) Using (Add1 H1 B).
 Disjunc A (B\/A).
 For A Use IP.
 Write B Using (DS H2 H3).
@@ -54,11 +56,6 @@ Lemma ex_6_22 (A B:Prop): (A -> B) -> (~B -> ~A).
   Write B Using (MP H1 H3). 
   For False Use (Contr H2 H4).
 Qed.
-
-Ltac Case A :=
-  let H := fresh "H0" in
-    let H' := fresh "H0" in
-      destruct A as [H | H'].
 
 
 Lemma ex_6_23 (A B C:Prop): (A\/B) -> ((A -> C) -> ((B -> C) -> C)).
@@ -111,7 +108,7 @@ Lemma p375_6_9 A B C D: ((A \/ B) -> (B /\ C)) -> ((B -> C) \/ D).
 P_with_CP.
 Disjunc (B->C) (B->C \/D).
 P_with_CP.
-Write (A\/B) Using (add2 H2 A).
+Write (A\/B) Using (Add2 H2 A).
 Write (B/\C) Using (MP H1 H3).
 Write C Using (Simp_right H4). 
 Qed.

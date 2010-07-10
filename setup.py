@@ -28,8 +28,8 @@ setup(name="cockerel",
 
       entry_points={
         'console_scripts': [
-            'cockerel=cockerel.',
-            'coqd=coqd.',
+            'cockerel=cockerel.runserver.main',
+            'coqd=coqd.connserv.main',
             ],
         },
 
@@ -44,5 +44,6 @@ setup(name="cockerel",
 
       tests_requires=[
         'nose == 0.11.3',
+        'alfajor',
         ],
       )

@@ -1,4 +1,4 @@
-Require Import HypError.v
+Require Import HypError.
 
 (* This language should be used to add new hypothesis
    without changing the goal state *)

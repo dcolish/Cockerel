@@ -1,8 +1,10 @@
 1. Introduction
 ----------------------------------------
 
- Cockerel is a web based interactive theorem prover based on the Coq
- proof assistant. 
+ Cockerel is a web based interactive mathematical lesson planner. It allows 
+ instructors to create mathematical lesson plans using wiki markup and then
+ assign these to students.
+
 
 This code base will be extremely unstable over the summer. If you plan
 on using it send me a message.

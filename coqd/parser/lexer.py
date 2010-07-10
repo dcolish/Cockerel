@@ -1,8 +1,6 @@
 from ply import lex
 
-
 t_ignore = ' \t'
-
 
 reserved = {'Theorem': 'THEOREM',
             'Goal': 'GOAL',
@@ -13,7 +11,6 @@ reserved = {'Theorem': 'THEOREM',
             'subgoal': 'SUBGOAL',
             'prompt': 'PROMPT',
             }
-
 
 tokens = ('OR',
           'CARET',
