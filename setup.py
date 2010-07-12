@@ -9,7 +9,7 @@ Links
 
 * `documentation <http://packages.python.org/Cockerel>`_
 * `development version
-  <http://github.com/dcolish/Cockerel/zipball/master#egg=Cockerel-dev>`_
+  <http://github.com/dcolish/cockerel/zipball/master#egg=Cockerel-dev>`_
 
 """
 from setuptools import setup, find_packages
@@ -17,12 +17,13 @@ from setuptools import setup, find_packages
 setup(name="cockerel",
       version="dev",
       packages=find_packages(),
-
+      namespace_packages=['cockerel', 'coqd'],
       author='Dan Colish',
       author_email='dcolish@gmail.com',
-
       description='Simplified Theorem Checker for the Web',
-      long_description='TBW',
+      long_description=__doc__,
+      zip_safe=False,
+      platforms='any',
       license='BSD',
       url='http://www.github.com/dcolish/cockerel',
 
