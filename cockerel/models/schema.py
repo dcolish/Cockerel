@@ -1,5 +1,5 @@
 from werkzeug import generate_password_hash, check_password_hash
-from webapp import db
+from cockerel.webapp import db
 
 
 user_classes = db.Table('user_classes', db.Model.metadata,
@@ -23,6 +23,7 @@ class User(db.Model):
     email = db.Column(db.String(80))
     firstname = db.Column(db.String(80))
     lastname = db.Column(db.String(80))
+    # permissions = db.Column(db.Integer)
 
     def __init__(self, username, password):
         self.username = username
@@ -33,6 +34,9 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.pw_hash, password)
+
+    def set_permissions(self, permissions):
+        pass
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -76,3 +80,10 @@ class Lesson(db.Model):
 
     def __repr__(self):
         return '<Lesson %s>' % self.lesson_name
+
+
+class Group(db.Model):
+    __tablename__ = 'permissions'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    permissions = db.Column(db.Integer)

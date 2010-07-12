@@ -8,9 +8,9 @@ from flask import (
     )
 from flatland.out.markup import Generator
 
-from webapp.views.util import login_required
+from util import login_required
 
-from models.schema import db, Classes
+from cockerel.models.schema import db, Classes
 from .forms.classes import AddClassForm
 
 classes = Module(__name__)

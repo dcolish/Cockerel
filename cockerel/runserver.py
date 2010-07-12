@@ -1,4 +1,4 @@
-from webapp import app
+from cockerel.webapp import app
 
 
 def main():

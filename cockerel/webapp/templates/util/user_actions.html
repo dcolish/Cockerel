@@ -1,11 +1,10 @@
 <div id="useractions">
-  <ul>
   {% if session.username %}
-  <li>Hi, {{ session.username }}</li>
-  <li><a href="{{ url_for('admin.logout') }}">Logout</a></li>
+  <span>Hi, {{ session.username }}</span>
+  <span><a href="{{ url_for('admin.logout') }}">Logout</a></span>
   {% else %}
-  <li><a href="{{ url_for('admin.signup') }}">Signup</a></li>
-  <li><a href="{{ url_for('admin.login') }}">Login</a></li>
+  <span><a href="{{ url_for('admin.signup') }}">Signup</a></span>
+  <span><a href="{{ url_for('admin.login') }}">Login</a></span>
   {% endif %}
   </ul>
 </div>

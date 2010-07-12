@@ -6,13 +6,14 @@
 <p><a href="{{ url_for('classes.register', class_id=class_section.id) }}">Register</a></p>
 {% else %}
 <p>Lessons</p>
-{% if admin %}
-<p><a href="{{ url_for('lessons.add', class_id=class_section.id) }}">Add Lesson</a></p>
-{% endif %}
+
   <ul>
     {% for lesson in lessons %}
     <li><a href="{{ url_for('lessons.view', lesson_id = lesson.id) }}">{{ lesson.lesson_name }}</a></li>
     {% endfor %}
   </ul>
+{% endif %}
+{% if admin %}
+<p><a href="{{ url_for('lessons.add', class_id=class_section.id) }}">Add Lesson</a></p>
 {% endif %}
 {% endblock %}

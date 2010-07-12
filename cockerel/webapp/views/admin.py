@@ -9,7 +9,7 @@ from flask import (
 )
 from flatland.out.markup import Generator
 
-from models.schema import db, User
+from cockerel.models.schema import db, User
 from .forms.admin import LoginForm, SignupForm
 
 admin = Module(__name__)
@@ -17,8 +17,7 @@ admin = Module(__name__)
 
 @admin.route('/login', methods=['GET', 'POST'])
 def login():
-    # simple session setting
-    # TODO: make this do better auth
+    # TODO: make this do better auth, it needs to set a cookie for a period of time
     if request.method == 'POST':
         form = LoginForm.from_flat(request.form)
         if form.validate():

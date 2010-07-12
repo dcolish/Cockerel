@@ -1,7 +1,21 @@
+"""
+Cockerel
+--------------------
+A Lesson Planner and Prover for Math Classes.
+Requires you have Coq 8.2pl1 or higher installed
+
+Links
+`````
+
+* `documentation <http://packages.python.org/Cockerel>`_
+* `development version
+  <http://github.com/dcolish/Cockerel/zipball/master#egg=Cockerel-dev>`_
+
+"""
 from setuptools import setup, find_packages
 
 setup(name="cockerel",
-      version="0.1",
+      version="dev",
       packages=find_packages(),
 
       author='Dan Colish',
@@ -10,36 +24,39 @@ setup(name="cockerel",
       description='Simplified Theorem Checker for the Web',
       long_description='TBW',
       license='BSD',
-      url='http://dcolish.github.com/cockerel',
+      url='http://www.github.com/docolish/cockerel',
 
       classifiers=[
         'Development Status :: 2 - Pre-Alpha',
-        'Enviroment :: Console :: Web Enviroment',
+        'Environment :: Web Environment',
+        'Environment :: Console',
         'Intended Audience :: Education',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Coq :: 8.2pl1',
-        'Programming Language :: Coq :: 8.3',
-        'Operating System :: MacOS :: Posix :: Unix',
+        'Operating System :: Unix',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         ],
 
       entry_points={
         'console_scripts': [
-            'cockerel=cockerel.runserver.main',
-            'coqd=coqd.connserv.main',
+            'cockerel=cockerel.runserver:main',
+            'coqd=coqd.connserv:main',
             ],
         },
 
       install_requires=[
-        'flask',
+        'Flask',
         'Flask-SQLAlchemy',
-        'twisted',
+        'Flask-Jinja2Extender==dev',
+        'Flask-Markdown==dev',
+        'flatland',
         'pexpect',
         'ply',
         'SQLAlchemy',
+        'twisted',
         ],
 
       tests_requires=[
