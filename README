@@ -27,19 +27,15 @@ managing the python namespace. Assuming you have a project python
 install with setuptools, you can create a new virutalenv around the
 project directory to install into. This can be done with:
 
-        virutalenv <path>/<to>/<repo>
-
-Then activate the repo and execute:
-
-        python setup.py develop
-
-which will pull in all the dependencies needed to run coqd and
-webapp.py. At this point you can being running the application by
-running
-        python webapp/webapp.py
+        virutalenv some_env_path
+        . some_env_path/bin/activate
+        easy_install cockerel
         
-Then start coqd in another terminal with
-        python coqd/connserv.py
+To start Cockerel run
+        cockerel
+     
+To start Coqd run
+        coqd
 
 The Cockerel webpage will be at http://localhost:5000 by default
 
