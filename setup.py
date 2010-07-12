@@ -24,7 +24,7 @@ setup(name="cockerel",
       description='Simplified Theorem Checker for the Web',
       long_description='TBW',
       license='BSD',
-      url='http://www.github.com/docolish/cockerel',
+      url='http://www.github.com/dcolish/cockerel',
 
       classifiers=[
         'Development Status :: 2 - Pre-Alpha',
