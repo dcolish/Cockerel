@@ -28,7 +28,7 @@ def login():
                 form['username'].add_error(
                     'Username %s not found' % form['username'].value)
                 gen = Generator()
-                return render_template("/admin/login.html", form=form, html=gen)
+                return render_template("admin/login.html", form=form, html=gen)
 
             if user.check_password(request.form['password']):
                 g.user = user
@@ -39,10 +39,10 @@ def login():
                     return redirect(url_for('frontend.index'))
         else:
             gen = Generator()
-            return render_template("/admin/login.html", form=form, html=gen)
+            return render_template("admin/login.html", form=form, html=gen)
     form = LoginForm()
     gen = Generator()
-    return render_template("/admin/login.html",
+    return render_template("admin/login.html",
                            form=form,
                            html=gen,
                            **request.args)
