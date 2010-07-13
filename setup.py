@@ -51,7 +51,6 @@ setup(name="cockerel",
       install_requires=[
         'Flask',
         'Flask-SQLAlchemy',
-        'Flask-Jinja2Extender==dev',
         'Flask-Markdown==dev',
         'flatland',
         'pexpect',

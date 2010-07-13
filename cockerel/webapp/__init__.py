@@ -3,7 +3,7 @@ import os
 
 from flask import Flask
 from flaskext.sqlalchemy import SQLAlchemy
-from flaskext.markdown import load_markdown
+from flaskext.markdown import Markdown
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -21,7 +21,9 @@ from .util import register_modules
 register_modules(app, [admin, classes, frontend, lessons, prover])
 
 app.secret_key = os.urandom(24)
+
+# XXX: see if the db exists, if not make it and initialize
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 
 # reconfigure app jinja enviroment
-load_markdown(app)
+md = Markdown(app)

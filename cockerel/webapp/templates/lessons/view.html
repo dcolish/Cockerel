@@ -2,9 +2,7 @@
 {%  block content %}
 <h1>{{ lesson.lesson_name }}</h1>
 <span><a href="{{ url_for('lessons.edit', lesson_id = lesson.id) }}">Edit</a></span>
-{% markdown %}
-{{ lesson.text }}
-{% endmarkdown %}
+{{ lesson.text | markdown }}
 <p>Classes offering this lesson:</p>
 <ul>
 {% for class in lesson.classes %}
