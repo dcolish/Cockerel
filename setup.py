@@ -49,10 +49,11 @@ setup(name="cockerel",
         },
 
       install_requires=[
-        'Flask',
+        'flask',
         'Flask-SQLAlchemy',
         'Flask-Markdown==dev',
         'flatland',
+        'markdown',
         'pexpect',
         'ply',
         'SQLAlchemy',

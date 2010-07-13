@@ -3,13 +3,13 @@
     <dt>{{ form.username.label }}</dt>
     <dd>{{ html.input(form.username) }}</dd>
     {% for error in form.username.errors %}
-    <label for="{{ form.username }}">{{ error }}</li>
+    <label for="{{ form.username }}">{{ error }}</label>
     {% endfor %}
     <dt>{{ form.password.label }}</dt>
     <dd>{{ html.input(form.password) }}</dd>
     <ul>
     {% for error in form.password.errors %}
-    <label for="{{ form.password }}">{{ error }}</li>
+    <label for="{{ form.password }}">{{ error }}</label>
     {% endfor %}
 </dl>
 <p>{{ html.input(type='submit', value='add') }}</p>
