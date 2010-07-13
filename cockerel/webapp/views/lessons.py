@@ -42,7 +42,7 @@ def add(class_id):
     return render_template('lessons/add.html',
                            class_id=class_id,
                            form=form,
-                           gen=gen)
+                           html=gen)
 
 
 @lessons.route('/lessons/edit/<int:lesson_id>', methods=['GET', 'POST'])
