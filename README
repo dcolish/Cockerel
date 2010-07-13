@@ -22,13 +22,15 @@ project documentation for installation details; http://www.python.org/download
 Once you have satisified these dependencies, you can continue with
 installation. I strongly recommend using the virtualenv project for managing the
 python namespace. Assuming you have a project python install with setuptools,
-you can create a new virutalenv around the project directory to install
+you can create a new virtualenv around the project directory to install
 into. This can be done with:
 
-        virutalenv some_env_path
+        virtualenv some_env_path
         . some_env_path/bin/activate
-        easy_install cockerel
-        
+        easy_install Cockerel
+
+where 'Cockerel' is the directory where the repository resides.
+
 To start Cockerel run
         cockerel
      
