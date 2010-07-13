@@ -37,3 +37,18 @@ To start Coqd run
 
 The Cockerel webpage will be at http://localhost:5000 by default
 
+
+3. Developing Cockerel
+--------------------------------------
+
+For developing with Cockerel you should checkout the latest tree from github:
+
+    git clone git://github.com/dcolish/Cockerel.git
+
+Then
+
+    virtualenv some_env_path
+    . some_env_path/bin/activate
+    python setup.py develop
+
+easy_install will now download all dependencies for the project.
