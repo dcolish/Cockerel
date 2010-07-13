@@ -121,7 +121,7 @@ Split_Eq.
   P_with_CP.
   For Q Use (DS H1 H2).
   P_with_CP.
-  Pose (~P) For P. (* Pose uses the excluded middle axiom, not IP. This might be bad later *)
+  Pose (~P) For P. (* Pose uses the excluded middle axiom, not ID. This might be bad later *)
   Write Q Using (MP H1 H2).
   Solve_With H3.
   Disjunc (~P) (~P \/ Q).

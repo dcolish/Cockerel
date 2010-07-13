@@ -1,16 +1,17 @@
 <form id="f_login" action="{{ url_for('admin.login', **request.args) }}" method="POST">
-<dl>
+  <dl>
     <dt>{{ form.username.label }}</dt>
     <dd>{{ html.input(form.username) }}</dd>
     {% for error in form.username.errors %}
     <label for="{{ form.username }}">{{ error }}</label>
     {% endfor %}
     <dt>{{ form.password.label }}</dt>
-    <dd>{{ html.input(form.password) }}</dd>
+    <dd>{{ html.input(form.password, type='password') }}</dd>
     <ul>
-    {% for error in form.password.errors %}
-    <label for="{{ form.password }}">{{ error }}</label>
-    {% endfor %}
-</dl>
-<p>{{ html.input(type='submit', value='add') }}</p>
+      {% for error in form.password.errors %}
+      <label for="{{ form.password }}">{{ error }}</label>
+      {% endfor %}
+    </ul>
+  </dl>
+  <p>{{ html.input(type='submit', value='add') }}</p>
 </form>
