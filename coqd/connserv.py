@@ -1,4 +1,4 @@
-from configparser import SafeConfigParser
+from ConfigParser import SafeConfigParser
 from json import JSONDecoder, JSONEncoder
 
 import logging
@@ -14,7 +14,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class CoqProtocol(Protocol):
-            
 
     class ActiveConn(object):
 
@@ -108,6 +107,7 @@ class Configurator(SafeConfigParser):
 
 
 def main():
+    logging.info("Coq is starting... hold on")
     f = Factory()
     f.protocol = CoqProtocol
     reactor.listenTCP(8003, f)
