@@ -38,6 +38,7 @@ tokens = ('OR',
           'SEP',
           'TERM',
           'TILDE',
+          'BSLSH',
           ) + tuple(reserved.values())
 
 
@@ -50,6 +51,12 @@ def t_ID(t):
 def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)
+    return t
+
+
+def t_PROMPT(t):
+    r'(<prompt>|</prompt>)'
+    t.value = str(t.value)
     return t
 
 
@@ -89,6 +96,7 @@ t_RBRKT = r'\}'
 t_RPAREN = r'\)'
 t_SCOL = r'\;'
 t_TILDE = r'~'
+t_BSLSH = r'/'
 
 lex.lex()
 
@@ -101,6 +109,7 @@ if __name__ == '__main__':
   
   ============================
    forall A B  : Prop, A -> (~ ~ A) \/ B
+<prompt>Unnamed_thm < 2 |Unnamed_thm| 0 < </prompt>
 """
 
     lex.input(s)

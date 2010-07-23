@@ -1,8 +1,6 @@
 from multiprocessing import Process
 from pexpect import spawn, EOF
 
-# from parser.gram import parser
-
 
 class CoqProc(Process):
 
@@ -10,16 +8,15 @@ class CoqProc(Process):
         self.process = spawn('coqtop', ['-emacs-U'])
 
     def run(self, conn):
+        cmd = ''
         try:
             if conn.poll():
                 cmd = conn.recv()
                 self.process.send(cmd + "\n")
 
             self.process.expect('\<\/prompt\>')
-
-            result = self.process.before + self.process.after + " "
-            # result.strip()
-            # result = parser.parse(result)
+            # Strip out the cmd sent from the output
+            result = self.process.before[len(cmd):] + self.process.after + " "
             conn.send(result)
         except EOF:
             self.process.close()

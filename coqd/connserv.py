@@ -1,11 +1,12 @@
-from ConfigParser import SafeConfigParser
+"""
+Handle protocol for connections
+"""
 from json import JSONDecoder, JSONEncoder
 
 import logging
 from multiprocessing import Pipe
 
-from twisted.internet import reactor
-from twisted.internet.protocol import Factory, Protocol
+from twisted.internet.protocol import Protocol
 
 from base import CoqProc
 from parser.gram import parser
@@ -14,9 +15,14 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class CoqProtocol(Protocol):
-
+    """
+    Implementation of the Coq Protocol which handles connection and
+    disconnection of the server and roudtrips to and from the backend.
+    """
     class ActiveConn(object):
-
+        """
+        Does some work for dealing with the backend interpreter
+        """
         def __init__(self, userid):
             self.userid = userid
             self.here, self.there = Pipe(duplex=True)
@@ -48,21 +54,25 @@ class CoqProtocol(Protocol):
     active_conns = {}
 
     def dataReceived(self, data):
+        """
+        Parse data we've recieved and send to proof engine
+        Expects JSON will be in the schema {"command":"", "userid":""}
+        """
         req_data = JSONDecoder().decode(data)
         logging.debug("Got: %s", req_data)
         command = req_data.get('command')
         userid = req_data.get('userid')
-        resp_data = self.do_parse(self.process_command(userid,
-                                                       command))
-        self.transport.write(resp_data)
+        resp_data = self.handle_command(userid, command)
+        resp_data['response'] = self.do_parse(resp_data['response'])
+        self.transport.write(JSONEncoder().encode(resp_data))
         self.transport.loseConnection()
 
-    def do_parse(self, s):
-        s = ' '.join(s.splitlines())
-        result = parser.parse(s)
-        return JSONEncoder().encode(result)
+    def do_parse(self, output):
+        output = ' '.join(output.splitlines())
+        result = parser.parse(output)
+        return result
 
-    def process_command(self, userid, command):
+    def handle_command(self, userid, command):
         if not command:
             resp_dict = {'userid': userid,
                          'response': ''}
@@ -83,7 +93,7 @@ class CoqProtocol(Protocol):
 
             resp_dict = active_sess.read()
 
-        return JSONEncoder().encode(resp_dict)
+        return resp_dict
 
     def connectionLost(self, reason):
         if 'ConnectionDone' in ''.join(reason.parents):
@@ -97,21 +107,3 @@ class CoqProtocol(Protocol):
         if active_sess:
             active_sess.quit()
             del self.active_conns[userid]
-
-
-class Configurator(SafeConfigParser):
-    """Responsible or coqd configuration"""
-    def __init__(self, config_files):
-        self.conf = SafeConfigParser()
-        self.conf.read(config_files)
-
-
-def main():
-    logging.info("Coq is starting... hold on")
-    f = Factory()
-    f.protocol = CoqProtocol
-    reactor.listenTCP(8003, f)
-    reactor.run()
-
-if __name__ == '__main__':
-    main()

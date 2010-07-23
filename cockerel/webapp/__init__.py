@@ -25,6 +25,5 @@ app.secret_key = os.urandom(24)
 # XXX: see if the db exists, if not make it and initialize
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 
-
 # reconfigure app jinja enviroment
 md = Markdown(app)

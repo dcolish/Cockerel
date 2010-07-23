@@ -18,6 +18,7 @@ setup(name="cockerel",
       version="dev",
       packages=find_packages(),
       namespace_packages=['cockerel', 'coqd'],
+      include_package_data=True,
       author='Dan Colish',
       author_email='dcolish@gmail.com',
       description='Simplified Theorem Checker for the Web',
@@ -44,7 +45,7 @@ setup(name="cockerel",
       entry_points={
         'console_scripts': [
             'cockerel=cockerel.runserver:main',
-            'coqd=coqd.connserv:main',
+            'coqd=coqd.runner:main',
             ],
         },
 
@@ -53,14 +54,13 @@ setup(name="cockerel",
         'Flask-SQLAlchemy',
         'Flask-Markdown==dev',
         'flatland',
-        'markdown',
         'pexpect',
         'ply',
         'SQLAlchemy',
         'twisted',
         ],
 
-      tests_requires=[
+      test_requires=[
         'nose == 0.11.3',
         'alfajor',
         ],

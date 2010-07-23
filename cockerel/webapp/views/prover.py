@@ -13,7 +13,7 @@ from flask import (
 
 prover = Module(__name__)
 
- 
+
 def readscript(script):
     '''Chew up blank lines'''
     return [x for x in script.splitlines() if not x == '']

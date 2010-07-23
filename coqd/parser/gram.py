@@ -6,15 +6,26 @@ __all__ = ['tokens', 'parser', 'precedence']
 
 
 def p_proofst(p):
-    '''proofst : subgoal hyp goal
-            | subgoal goal'''
-    if len(p) == 4:
+    '''proofst : subgoal hyp goal term_prompt
+               | subgoal goal term_prompt
+               | sysmsg term_prompt'''
+    if len(p) == 5:
         p[0] = dict(subgoal=p[1],
                     hyp=p[2],
-                    goal=p[3])
-    else:
+                    goal=p[3],
+                    prompt=p[4])
+    elif len(p) == 4:
         p[0] = dict(subgoal=p[1],
-                    goal=p[2])
+                    hyp=[],
+                    goal=p[2],
+                    sysmsg=[],
+                    prompt=p[3])
+    else:
+        p[0] = dict(subgoal=[],
+                    hyp=[],
+                    goal=[],
+                    sysmsg=p[1],
+                    prompt=p[2])
 
 
 def p_subgoal(p):
@@ -102,8 +113,47 @@ def p_idlist(p):
         p[0] = str(p[1])
 
 
+def p_term_prompt(p):
+    '''term_prompt : PROMPT proverstate PROMPT'''
+    p[0] = dict(thm=p[2],
+                thmstate=p[3])
+
+
+def p_sysmsg(p):
+    '''sysmsg : PROOF idlist DOT'''
+    p[0] = dict(msg=p[2])
+
+
+def p_proverstate(p):
+    '''proverstate : thmname LARRW NUMBER PIPE thmlist NUMBER LARRW'''
+    p[0] = dict(proverline=p[2],
+                thmname=p[3],
+                thmlin=p[4])
+
+
+def p_thmlist(p):
+    '''thmlist : thmname PIPE thmlist
+               | thmname PIPE'''
+    if len(p) == 4:
+        p[0] = dict(names=' ,'.join((p[1], p[3])))
+    else:
+        p[0] = dict(names=p[1])
+
+
+def p_thmname(p):
+    '''thmname : ID
+               | ID NUMBER'''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = ''.join([p[1], str(p[2])])
+
+
 def p_error(p):
-    raise TypeError("unknown text at %r %s" % (p.value, p))
+    try:
+        raise TypeError("unknown text at %r %s" % (p.value, p))
+    except:
+        raise TypeError("unknown text at %s" % (p))
 
 precedence = (
     ('left', 'OR', 'AND'),
