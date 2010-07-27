@@ -35,8 +35,12 @@ Ltac Case A :=
       destruct A as [H | H'].
 
 Ltac Contr A B:= 
-  try (apply A in B; contradiction) || apply B in A; contradiction ||
-    idtac "No such contradiction found in the current proof".
+  apply (A B) || apply (B A) ||
+    let C := type of A in
+      let D := type of B in 
+        idtac "Hello"; idtac "GoodBye";
+          fail "In order to contradict" C "you can provide ~"C
+", in order to contradict" D "you can provide ~"D.
 
 
 Ltac Conj L R :=

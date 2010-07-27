@@ -24,7 +24,8 @@ Universal_Intros.
 Split_Eq.
   P_with_CP.
   For P Use IP.
-  For False Use (Contr H1 H2).
+  Contr H2 H2.
+  For False Use (Contr H2 H2).
   P_with_CP.
   P_with_CP.
   For False Use (Contr H1 H2).
