@@ -1,7 +1,8 @@
 """
 Main entry points for coqd
 """
-from argparse import ArgumentParser
+# from argparse import ArgumentParser
+from optparse import OptionParser
 from ConfigParser import SafeConfigParser
 import logging
 from sys import argv
@@ -20,12 +21,12 @@ class Configurator(SafeConfigParser):
 
 
 def options(parser):
-    parser.add_argument("--module", dest="modules", action="append",
+    parser.add_option("--module", dest="modules", action="append",
                         default=[],
                         help="load modules into coqd, more than one "
                         "can be specified",
                         )
-    parser.add_argument("--version", action="version", version="%(prog)s 0.1")
+
     return parser
 
 
@@ -33,11 +34,12 @@ def main():
     """
     Setup and run coqd
     """
-    parser = ArgumentParser(prog="Coqd", description="Options for Coqd")
+    parser = OptionParser(prog="Coqd", description="Options for Coqd",
+                          version="Coqd 0.1")
     parser = options(parser)
-    args = parser.parse_args(argv[1:])
+    opts, args = parser.parse_args(argv[1:])
 
-    if args.modules:
+    if opts.modules:
         # XXX: actual module loading occurs here
         pass
 

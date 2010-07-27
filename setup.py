@@ -52,7 +52,7 @@ setup(name="cockerel",
       install_requires=[
         'flask',
         'Flask-SQLAlchemy',
-        'Flask-Markdown==dev',
+        'Flask-Markdown',
         'flatland',
         'pexpect',
         'ply',
@@ -60,8 +60,9 @@ setup(name="cockerel",
         'twisted',
         ],
 
-      test_requires=[
-        'nose == 0.11.3',
+      test_suite="nose.collector",
+      tests_require=[
+        'nose',
         'alfajor',
         ],
       )

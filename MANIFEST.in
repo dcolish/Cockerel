@@ -1,0 +1,2 @@
+recursive-include cockerel/webapp/templates *
+recursive-include cockerel/webapp/static *
