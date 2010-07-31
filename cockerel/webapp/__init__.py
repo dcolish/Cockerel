@@ -10,8 +10,10 @@ logging.basicConfig(level=logging.DEBUG)
 HOST = "localhost"
 app = Flask(__name__)
 db = SQLAlchemy(app)
+md = Markdown(app, extensions=['tables'])
 
-Markdown(app)
+from .mdx_prover import ProverExtension
+md.registerExtension(ProverExtension)
 
 from .views.admin import admin
 from .views.classes import classes

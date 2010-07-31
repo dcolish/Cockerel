@@ -15,6 +15,19 @@ lessons_classes = db.Table('lessons_classes', db.Model.metadata,
                                      db.ForeignKey('classes.id')))
 
 
+class Proof(db.Model):
+    __tablename__ = 'proofs'
+    id = db.Column(db.Integer, primary_key=True)
+    proofscript = db.Column(db.String)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def __init__(self, proofscript):
+        self.proofscript = proofscript
+
+    def __repr__(self):
+        return '<Proof %r>' % self.proofscript
+
+
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -24,6 +37,9 @@ class User(db.Model):
     firstname = db.Column(db.String(80))
     lastname = db.Column(db.String(80))
     # permissions = db.Column(db.Integer)
+    proofs = db.relationship('Proof',
+                             order_by=Proof.id,
+                             backref='proofs')
 
     def __init__(self, username, password):
         self.username = username

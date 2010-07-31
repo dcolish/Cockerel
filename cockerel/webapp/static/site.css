@@ -1,5 +1,6 @@
 body {
-   width 100%;
+   width: 96%;
+   height: 100%;
 }
 
 #content {
@@ -66,3 +67,15 @@ body {
    style: none;
 }
 
+.proofscript {
+   padding: 5px;
+   display: block;
+   color: black;
+   text-decoration: none;
+   width: 50%;
+   background: #DFFFFF;
+}
+
+.proofscript:hover {
+   background: #CCFFFF;
+}

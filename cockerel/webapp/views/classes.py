@@ -11,7 +11,7 @@ from flatland.out.markup import Generator
 from util import login_required
 
 from cockerel.models.schema import db, Classes
-from .forms.classes import AddClassForm
+from .forms.classes import AddEditClassForm
 
 classes = Module(__name__)
 
@@ -27,7 +27,7 @@ def index():
 def add():
     if request.method == 'POST':
 
-        form = AddClassForm.from_flat(request.form)
+        form = AddEditClassForm.from_flat(request.form)
         form.validate()
         class_section = Classes(form['classname'].value,
                                 form['description'].value,
@@ -37,7 +37,29 @@ def add():
         return redirect(url_for('classes.view',
                         class_id=class_section.id))
 
-    form = AddClassForm()
+    form = AddEditClassForm()
+    html = Generator()
+    return render_template('classes/add.html',
+                           form=form,
+                           html=html)
+
+
+@classes.route('/classes/edit/<int:class_id>', methods=['GET', 'POST'])
+@login_required
+def edit():
+    if request.method == 'POST':
+
+        form = AddEditClassForm.from_flat(request.form)
+        form.validate()
+        class_section = Classes(form['classname'].value,
+                                form['description'].value,
+                                owner=g.user)
+        db.session.add(class_section)
+        db.session.commit()
+        return redirect(url_for('classes.view',
+                        class_id=class_section.id))
+
+    form = AddEditClassForm()
     html = Generator()
     return render_template('classes/add.html',
                            form=form,

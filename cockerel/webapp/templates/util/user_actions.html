@@ -1,9 +1,9 @@
 <div id="useractions">
   {% if session.username %}
   <span>Hi, {{ session.username }}</span>
-  <span><a href="{{ url_for('admin.logout') }}">Logout</a></span>
+  <span><a id="logout" href="{{ url_for('admin.logout') }}">Logout</a></span>
   {% else %}
-  <span><a href="{{ url_for('admin.signup') }}">Signup</a></span>
-  <span><a href="{{ url_for('admin.login') }}">Login</a></span>
+  <span><a id="signup" href="{{ url_for('admin.signup') }}">Signup</a></span>
+  <span><a id="login" href="{{ url_for('admin.login') }}">Login</a></span>
   {% endif %}
 </div>
