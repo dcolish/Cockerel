@@ -6,10 +6,14 @@ reserved = {'Theorem': 'THEOREM',
             'Goal': 'GOAL',
             'Proof': 'PROOF',
             'Prop': 'PROP',
+            'completed': 'COMPLETED',
+            'defined': 'DEFINED',
             'forall': 'FORALL',
             'exists': 'EXISTS',
             'subgoal': 'SUBGOAL',
             'prompt': 'PROMPT',
+            'Exited': 'EXITED',
+            'Qed': 'QED',
             }
 
 tokens = ('OR',
@@ -106,7 +110,7 @@ if __name__ == '__main__':
     # A little unit test for the lexer
     s = """
 1 subgoal
-  
+
   ============================
    forall A B  : Prop, A -> (~ ~ A) \/ B
 <prompt>Unnamed_thm < 2 |Unnamed_thm| 0 < </prompt>

@@ -10,7 +10,7 @@ A simple example:
   Goal True -> True.
   >>>
 """
-
+from urllib import urlencode
 import re
 import markdown
 
@@ -31,19 +31,20 @@ class ProverPreprocessor(markdown.preprocessors.Preprocessor):
     RE = re.compile(r'(?P<begin>^<{3,})[ ]*\n(?P<proofscript>.*?)'
                     '(?P<end>^>{3,})[ ]*$',
                     re.MULTILINE | re.DOTALL)
-    WRAP = """<a class="proofscript" href="/prover"><pre>%s</pre></a>"""
+    WRAP = """
+<a class="proofscript" href="/prover?{url}"><pre>{proof}</pre></a>"""
 
     def __init__(self, md):
         markdown.preprocessors.Preprocessor.__init__(self, md)
 
     def run(self, lines):
-        """ Match and store Fenced Code Blocks in the HtmlStash."""
-
         text = "\n".join(lines)
         while 1:
             m = self.RE.search(text)
             if m:
-                proof = self.WRAP % (self._escape(m.group('proofscript')))
+                proof = self.WRAP.format(
+                    url=urlencode(dict(proof=m.group('proofscript').rstrip())),
+                    proof=self._escape(m.group('proofscript')))
 
                 placeholder = self.markdown.htmlStash.store(proof, safe=True)
                 text = '%s\n%s\n%s' % (text[:m.start()], placeholder,

@@ -1,7 +1,7 @@
 import logging
 import os
 
-from flask import Flask
+from flask import Flask, g
 from flaskext.sqlalchemy import SQLAlchemy
 from flaskext.markdown import Markdown
 
@@ -12,7 +12,7 @@ app = Flask(__name__)
 db = SQLAlchemy(app)
 md = Markdown(app, extensions=['tables'])
 
-from .mdx_prover import ProverExtension
+from .views.utils.mdx_prover import ProverExtension
 md.registerExtension(ProverExtension)
 
 from .views.admin import admin
@@ -20,14 +20,22 @@ from .views.classes import classes
 from .views.frontend import frontend
 from .views.lessons import lessons
 from .views.prover import prover
-from .util import register_modules
+from .utils import register_modules
 
 register_modules(app, [admin, classes, frontend, lessons, prover])
 
 app.secret_key = os.urandom(24)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['COQD_HOST'] = 'localhost'
+app.config['COQD_PORT'] = 8003
 
 # see if the db exists, if not make it and initialize
 if not os.path.exists(app.config.get('SQLALCHEMY_DATABASE_URI')):
     db.create_all()
+
+
+def update_config():
+    g.config = app.config
+
+app.before_request(update_config)

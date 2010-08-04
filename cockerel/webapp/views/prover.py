@@ -4,6 +4,7 @@ import telnetlib
 from uuid import uuid4
 
 from flask import (
+    g,
     Module,
     url_for,
     render_template,
@@ -33,7 +34,8 @@ def ping_coqd():
 @prover.route('/prover', methods=['GET', 'POST'])
 def editor():
     proofst = None
-    unprocessed = "(* Begin Your Proof Here *)"
+    host = g.config.get('COQD_HOST')
+    port = g.config.get('COQD_PORT')
     lineno = 0
 
     if request.method == 'POST':
@@ -47,30 +49,32 @@ def editor():
             processed = None
 
         elif request.form.get('undo'):
-            lineno = int(request.form.get('line')) - 1
+            lineno = 0 if lineno == 0 else int(request.form.get('line')) - 1
             proofscript = request.form.get('proofscript')
             processed, unprocessed, commandlist = formatscript(proofscript,
                                                                lineno)
             command = 'Undo.'
 
         else:
-            lineno = int(request.form.get('line')) + 1
+            lineno = int(request.form.get('line'))
             proofscript = request.form.get('proofscript')
             processed, unprocessed, commandlist = formatscript(proofscript,
                                                   lineno)
             command = commandlist[lineno]
             logging.debug('Sending %d : %s', lineno, command)
-
+            lineno += 1
         # here is where we'll pass it to coqd
         if command:
             try:
-                tn = telnetlib.Telnet('localhost', 8003)
+                tn = telnetlib.Telnet(host, port)
                 tn.write(JSONEncoder().encode(dict(userid=str(session['id']),
                                                command=command)))
 
                 proofst = JSONDecoder().decode(tn.read_all())
                 proofst = proofst.get('response', None)
+
             except Exception:
+                lineno = lineno - 1 if lineno != 0 else 0
                 logging.error("Connection to coqd failed")
 
         return render_template('prover/prover.html',
@@ -80,6 +84,8 @@ def editor():
                                proofst=proofst,
                                lineno=lineno)
     else:
+        # new proof session so set it up
+        unprocessed = request.args.get('proof', "(* Begin Your Proof Here *)")
         return render_template('prover/prover.html',
                                prover_url=url_for('editor'),
                                proofst=proofst,
