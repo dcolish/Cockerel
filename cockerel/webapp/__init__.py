@@ -12,14 +12,14 @@ app = Flask(__name__)
 db = SQLAlchemy(app)
 md = Markdown(app, extensions=['tables'])
 
-from .views.utils.mdx_prover import ProverExtension
+from .views.prover.mdx_prover import ProverExtension
 md.registerExtension(ProverExtension)
 
 from .views.admin import admin
 from .views.classes import classes
 from .views.frontend import frontend
 from .views.lessons import lessons
-from .views.prover import prover
+from .views.prover.prover import prover
 from .utils import register_modules
 
 register_modules(app, [admin, classes, frontend, lessons, prover])

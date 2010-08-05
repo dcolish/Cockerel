@@ -1,4 +1,5 @@
 from json import JSONDecoder, JSONEncoder
+from hashlib import sha1
 import logging
 import telnetlib
 from uuid import uuid4
@@ -25,6 +26,10 @@ def formatscript(script, slice):
     processed = '\\n'.join(commandlist[:slice])
     unprocessed = '\\n'.join(commandlist[slice:])
     return processed, unprocessed, commandlist
+
+
+def hash_theorem(theorem):
+    return sha1(theorem).hexdigest()
 
 
 def ping_coqd():
