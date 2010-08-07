@@ -1,4 +1,6 @@
 """
+Connserv
+~~~~~~~~
 Handle protocol for connections
 """
 from json import JSONDecoder, JSONEncoder

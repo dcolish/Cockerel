@@ -6,8 +6,8 @@
 $(document).ready(function () {
     var editor = CodeMirror.fromTextArea("f_prover_proofscript", {
         parserfile: "parsedummy.js",
-        path: "/static/codemirror/js/",
-        stylesheet: "/static/codemirror/css/jscolors.css",
+        path: "http://colishcloud.appspot.com/static/codemirror/js/",
+        stylesheet: "http://colishcloud.appspot.com/static/codemirror/css/jscolors.css",
         tabMode: "spaces",
         initCallback: function() { 
             editor.setCode("{%- if processed -%}{{ processed|safe }} \n {% endif %}{%- if unprocessed -%}{{ unprocessed|safe }}{% endif %}\n\n");

@@ -1,3 +1,17 @@
+"""
+Lexer
+-----
+Token definitons for the Coqtop Output Language.
+
+.. warning:: It is not meant to be used on its own and will not provide a useful
+             language
+
+To use import the tokens object::
+
+  from coqd.parser.lexer import tokens
+
+"""
+
 from ply import lex
 
 t_ignore = ' \t'
@@ -47,6 +61,7 @@ tokens = ('OR',
 
 
 def t_ID(t):
+    """Ensure that reserved words are not overwritten with ID's"""
     r'[a-zA-Z_][a-zA-Z_0-9\']*'
     t.type = reserved.get(t.value, 'ID')    # Check for reserved words
     return t
@@ -78,6 +93,7 @@ def t_error(t):
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
+
 
 t_OR = r'\\/'
 t_CARET = r'\^'

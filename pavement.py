@@ -14,9 +14,19 @@ def setup():
 
 
 @task
+@needs('clean_pyc')
+def clean_all():
+    for area in 'cockerel', 'coqd':
+        for dir, _, files in os.walk(area):
+            for fn in files:
+                if fn.endswith('.pyc'):
+                    path(dir + '/' + fn).unlink()
+
+
+@task
 def clean_pyc():
     """Remove orphaned .pyc files."""
-    for area in 'idealist', 'test', 'test2':
+    for area in 'cockerel', 'coqd':
         for dir, _, files in os.walk(area):
             sources = set(fn for fn in files if fn.endswith('.py'))
             for fn in files:

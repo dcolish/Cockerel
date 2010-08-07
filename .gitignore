@@ -10,3 +10,4 @@ parsetab.py
 parser.out
 *.v.d
 *.egg-info
+docs/_build

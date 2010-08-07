@@ -13,6 +13,8 @@ from flask import (
     session,
     )
 
+from cockerel.models.schema import Proof, Theorem
+
 prover = Module(__name__)
 
 
@@ -90,10 +92,18 @@ def editor():
                                lineno=lineno)
     else:
         # new proof session so set it up
-        unprocessed = request.args.get('proof', "(* Begin Your Proof Here *)")
+        unprocessed = request.args.get('theorem', "")
+        theorem = Theorem.query.filter_by(id=unprocessed).one()
+        if theorem:
+            text = theorem.text.rstrip()
+            proof = Proof.query.filter_by(theorem=theorem).first()
+            if not proof:
+                proof = ""
+        else:
+            theorem = proof = ""
         return render_template('prover/prover.html',
                                prover_url=url_for('editor'),
                                proofst=proofst,
                                processed=None,
-                               unprocessed=unprocessed,
+                               unprocessed=''.join([text,proof]),
                                lineno=lineno)

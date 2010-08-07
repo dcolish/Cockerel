@@ -1,4 +1,6 @@
 """
+Runner
+~~~~~~
 Main entry points for coqd
 """
 # from argparse import ArgumentParser
@@ -14,7 +16,7 @@ from connserv import CoqProtocol
 
 
 class Configurator(SafeConfigParser):
-    """Responsible or coqd configuration"""
+    """Responsible for coqd configuration"""
     def __init__(self, config_files):
         self.conf = SafeConfigParser()
         self.conf.read(config_files)

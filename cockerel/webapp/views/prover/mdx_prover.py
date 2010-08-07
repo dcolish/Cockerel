@@ -14,6 +14,12 @@ from urllib import urlencode
 import re
 import markdown
 
+from sqlalchemy.orm.exc import NoResultFound
+
+from cockerel.webapp import db
+from cockerel.models.schema import Theorem
+from .prover import hash_theorem
+
 
 class ProverExtension(markdown.Extension):
     """ Add definition lists to Markdown. """
@@ -28,7 +34,7 @@ class ProverExtension(markdown.Extension):
 class ProverPreprocessor(markdown.preprocessors.Preprocessor):
     """ Process Theorem. """
 
-    RE = re.compile(r'(?P<begin>^<{3,})[ ]*\n(?P<proofscript>.*?)'
+    RE = re.compile(r'(?P<begin>^<{3,})[ ]*\n(?P<theorem>.*?)'
                     '(?P<end>^>{3,})[ ]*$',
                     re.MULTILINE | re.DOTALL)
     WRAP = """
@@ -42,9 +48,18 @@ class ProverPreprocessor(markdown.preprocessors.Preprocessor):
         while 1:
             m = self.RE.search(text)
             if m:
+                hash_value = hash_theorem(m.group('theorem'))
+                try:
+                    theorem = Theorem.query.filter_by(
+                        hash_value=hash_value).one()
+                except NoResultFound:
+                    theorem = Theorem(text=m.group('theorem'),
+                                      hash_value=hash_value)
+                    db.session.add(theorem)
+                    db.session.commit()
                 proof = self.WRAP.format(
-                    url=urlencode(dict(proof=m.group('proofscript').rstrip())),
-                    proof=self._escape(m.group('proofscript')))
+                    url=urlencode(dict(theorem=theorem.id)),
+                    proof=self._escape(theorem.text))
 
                 placeholder = self.markdown.htmlStash.store(proof, safe=True)
                 text = '%s\n%s\n%s' % (text[:m.start()], placeholder,

@@ -1,3 +1,9 @@
+"""
+cockerel.webapp
+---------------
+Main instance of the webapp. All modules will be loaded from this file. To
+add a new module you must import it here and register it.
+"""
 import logging
 import os
 
@@ -36,6 +42,7 @@ if not os.path.exists(app.config.get('SQLALCHEMY_DATABASE_URI')):
 
 
 def update_config():
+    """syncronizes the config with the g global request object"""
     g.config = app.config
 
 app.before_request(update_config)

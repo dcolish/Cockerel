@@ -15,11 +15,30 @@ lessons_classes = db.Table('lessons_classes', db.Model.metadata,
                                      db.ForeignKey('classes.id')))
 
 
+class Theorem(db.Model):
+    __tablename__ = 'theorems'
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String)
+    hash_value = db.Column(db.String)
+
+    def __init__(self, text, hash_value):
+        self.text = text
+        self.hash_value = hash_value
+
+    def __repr__(self):
+        return '<Proof %r>' % self.text
+
+
 class Proof(db.Model):
     __tablename__ = 'proofs'
     id = db.Column(db.Integer, primary_key=True)
     proofscript = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    theorem_id = db.Column(db.Integer, db.ForeignKey('theorems.id'))
+
+    theorem = db.relationship('Theorem',
+                              order_by=Theorem.id,
+                              backref='theorems')
 
     def __init__(self, proofscript):
         self.proofscript = proofscript

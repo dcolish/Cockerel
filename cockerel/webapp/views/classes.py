@@ -1,3 +1,11 @@
+"""
+classes.py
+-----------------------------
+
+Controller functions for classes. A class object allows you to add associated
+lesson plans.
+"""
+
 from flask import (
     g,
     Module,
@@ -18,6 +26,7 @@ classes = Module(__name__)
 
 @classes.route('/classes', methods=['GET'])
 def index():
+    """Shows all classes currently in the system"""
     classes = Classes.query.all()
     return render_template("/classes/index.html", classes=classes)
 
@@ -25,6 +34,7 @@ def index():
 @classes.route('/classes/add', methods=['GET', 'POST'])
 @login_required
 def add():
+    """Users can add classes if they are authenticated"""
     if request.method == 'POST':
 
         form = AddEditClassForm.from_flat(request.form)
@@ -47,8 +57,8 @@ def add():
 @classes.route('/classes/edit/<int:class_id>', methods=['GET', 'POST'])
 @login_required
 def edit():
+    """Make modifications to a class"""
     if request.method == 'POST':
-
         form = AddEditClassForm.from_flat(request.form)
         form.validate()
         class_section = Classes(form['classname'].value,
@@ -69,6 +79,7 @@ def edit():
 @classes.route('/classes/register/<int:class_id>', methods=['GET'])
 @login_required
 def register(class_id):
+    """As a student user, register for access to a class"""
     if class_id and request.method == 'GET':
         section = Classes.query.filter_by(id=class_id).first()
         section.users.append(g.user)
@@ -79,6 +90,8 @@ def register(class_id):
 
 @classes.route('/classes/view/<int:class_id>', methods=['GET'])
 def view(class_id):
+    """View the lesson plans offered by a specific class. The user must be
+    either the admin or registered for that class"""
     section = Classes.query.filter_by(id=class_id).first()
     lessons = section.lessons
     if g.user in section.users:

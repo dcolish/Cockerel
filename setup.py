@@ -49,6 +49,10 @@ setup(name="cockerel",
             ],
         },
 
+      extras_require={
+        'doc': ['sphinx', 'Sphinx-PyPI-upload'],
+        },
+
       install_requires=[
         'flask',
         'Flask-Markdown==dev',
