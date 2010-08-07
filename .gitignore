@@ -3,11 +3,14 @@ bin/
 include/
 lib/
 lib64
-*.glob
-*.vo
 *.pyc
 parsetab.py
 parser.out
+*.vo
+*.glob
+*.d
+coqext/hypreason/Makefile
 *.v.d
 *.egg-info
 docs/_build
+
