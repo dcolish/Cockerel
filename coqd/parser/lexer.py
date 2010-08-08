@@ -4,9 +4,10 @@ Lexer
 Token definitons for the Coqtop Output Language.
 
 .. warning:: It is not meant to be used on its own and will not provide a useful
-             language
+             language.
 
-To use import the tokens object::
+However you can use it with a parser by importing the tokens; to import the
+tokens object::
 
   from coqd.parser.lexer import tokens
 
@@ -22,10 +23,13 @@ reserved = {'Theorem': 'THEOREM',
             'Prop': 'PROP',
             'completed': 'COMPLETED',
             'defined': 'DEFINED',
+            'True': 'TRUE',
+            'False': 'FALSE',
             'forall': 'FORALL',
             'exists': 'EXISTS',
             'subgoal': 'SUBGOAL',
             'prompt': 'PROMPT',
+            'is': 'IS',
             'Exited': 'EXITED',
             'Qed': 'QED',
             }
@@ -61,7 +65,7 @@ tokens = ('OR',
 
 
 def t_ID(t):
-    """Ensure that reserved words are not overwritten with ID's"""
+    # Ensure that reserved words are not overwritten with ID's
     r'[a-zA-Z_][a-zA-Z_0-9\']*'
     t.type = reserved.get(t.value, 'ID')    # Check for reserved words
     return t
@@ -124,15 +128,23 @@ lex.lex()
 if __name__ == '__main__':
 
     # A little unit test for the lexer
-    s = """
+    s = ("""
 1 subgoal
 
   ============================
    forall A B  : Prop, A -> (~ ~ A) \/ B
 <prompt>Unnamed_thm < 2 |Unnamed_thm| 0 < </prompt>
+""",
 """
+1 subgoal
+  
+  ============================
+   True -> True
 
-    lex.input(s)
+<prompt>Unnamed_thm < 2 |Unnamed_thm| 0 < </prompt> 
+""",
+)
+    lex.input(s[1])
 
     while True:
         tok = lex.token()

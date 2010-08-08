@@ -54,9 +54,11 @@ __all__ = ['tokens', 'parser', 'precedence']
 
 
 def p_proofst(p):
+
     """proofst : subgoal hyp goal term_prompt
                | subgoal goal term_prompt
-               | sysmsg term_prompt"""
+               | sysmsg term_prompt
+    """
     if len(p) == 5:
         p[0] = dict(subgoal=p[1],
                     hyp=p[2],
@@ -77,7 +79,8 @@ def p_proofst(p):
 
 
 def p_subgoal(p):
-    """subgoal : NUMBER SUBGOAL"""
+    """subgoal : NUMBER SUBGOAL
+               | SUBGOAL"""
     p[0] = ' '.join((str(p[1]), str(p[2])))
 
 
@@ -153,6 +156,8 @@ def p_idlist(p):
     """idlist : ID idlist
               | TILDE idlist
               | PLING idlist
+              | TRUE
+              | FALSE
               | ID
               """
     if len(p) == 3:
@@ -168,8 +173,10 @@ def p_term_prompt(p):
 
 
 def p_sysmsg(p):
-    """sysmsg : PROOF idlist DOT"""
-    p[0] = dict(msg=p[2])
+    """sysmsg : PROOF idlist DOT
+              | PROOF COMPLETED DOT
+              | thmname IS DEFINED"""
+    p[0] = dict(msg=' '.join(p[1:]))
 
 
 def p_proverstate(p):
@@ -181,9 +188,11 @@ def p_proverstate(p):
 
 def p_thmlist(p):
     """thmlist : thmname PIPE thmlist
-               | thmname PIPE"""
+               | thmname PIPE
+               | PIPE
+               """
     if len(p) == 4:
-        p[0] = dict(names=' ,'.join((p[1], p[3])))
+        p[0] = dict(names=' ,'.join((p[1], p[3]['names'])))
     else:
         p[0] = dict(names=p[1])
 

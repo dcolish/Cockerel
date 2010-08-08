@@ -42,6 +42,19 @@ if __name__ == '__main__':
 #    A -> ~ ~ A \/ B > C
 # <prompt>Unnamed_thm < 2 |Unnamed_thm| 0 < </prompt>
 # """,
+"""
+1 subgoal
+  
+  ============================
+   True -> True
+
+<prompt>Unnamed_thm < 2 |Unnamed_thm| 0 < </prompt> 
+""",
+"""
+Unnamed_thm is defined
+
+<prompt>Coq < 5 || 0 < </prompt>
+""",
 )
 
     for x in s:

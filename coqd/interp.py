@@ -1,10 +1,11 @@
 from code import InteractiveConsole
 from json import JSONDecoder, JSONEncoder
+import readline
 import logging
 import telnetlib
 
 
-def fee(command):
+def send(command):
     try:
         tn = telnetlib.Telnet('localhost', 8003)
         tn.write(JSONEncoder().encode(dict(userid=0,
@@ -15,7 +16,9 @@ def fee(command):
     except Exception:
         logging.error("Connection to coqd failed")
 
-
-foo = InteractiveConsole()
-f = foo.raw_input(">>>")
-fee(f)
+while True:
+    try:
+        prompt = raw_input(">>> ")
+        send(prompt)
+    except:
+        pass

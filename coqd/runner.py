@@ -28,7 +28,9 @@ def options(parser):
                         help="load modules into coqd, more than one "
                         "can be specified",
                         )
-
+    parser.add_option("--serialize", action="store_true",
+                      default=False,
+                      help="Serialize output to JSON")
     return parser
 
 
