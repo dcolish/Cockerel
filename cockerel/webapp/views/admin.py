@@ -17,7 +17,8 @@ admin = Module(__name__)
 
 @admin.route('/login', methods=['GET', 'POST'])
 def login():
-    # TODO: make this do better auth, it needs to set a cookie for a period of time
+    # TODO: make this do better auth, it needs to set a cookie for a period of
+    #  time
     if request.method == 'POST':
         form = LoginForm.from_flat(request.form)
         if form.validate():
