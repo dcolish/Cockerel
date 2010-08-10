@@ -19,12 +19,12 @@ Ltac Universal_Intros :=
    (* || NO_INTRO. *)
 
 
-Ltac Add1 H B :=
+Ltac Addition1 H B :=
    let H' := fresh "H0" in
    let A := type of H in
    assert (H' : A \/ B); [ left; try assumption | ].
 
-Ltac Add2 H B :=
+Ltac Addition2 H B :=
    let H' := fresh "H0" in
    let A := type of H in
    assert (H' : B \/ A); [ right; try assumption | ].
@@ -36,11 +36,9 @@ Ltac Case A :=
 
 Ltac Contr A B:= 
   apply (A B) || apply (B A) ||
-    let C := type of A in
-      let D := type of B in 
-        idtac "Hello"; idtac "GoodBye";
-          fail "In order to contradict" C "you can provide ~"C
-", in order to contradict" D "you can provide ~"D.
+    let TA := type of A in
+      let TB := type of B in 
+          fail "In order to contradict" TA "you can provide ~"TA ", in order to contradict" TB "you can provide ~"TB.
 
 
 Ltac Conj L R :=
@@ -114,38 +112,8 @@ Ltac IP :=
   apply ID; intro H. (* || FAILED H; NO_INTRO. *)
 
 
-Ltac MP f x :=
-   let H := fresh "H0" in
-   let T := type of (f x) in
-   assert (H : T); [ apply  (f x) | ].
 
-Ltac MT H N := 
-  let C := fresh "H0" in
-    let P := type of H in  
-      match P with
-        | ?p -> ?q => 
-          match type of N with
-            | ~q => assert (C: ~q -> ~p); intros; [tauto |] ; apply C in N; clear C
-            | ?T => idtac T "is not a negation of " q
-          end
-        | ?T => idtac T "was expected to be an implication" 
-      end.
-
-Ltac P_with_CP :=
-   Universal_Intros;
-   let H := fresh "H0" in
-   let tmp := fresh "tmp" in
-   match goal with
-   | [ |- ?a /\ ?b -> ?c ] => intros [H tmp]; generalize tmp; clear tmp
-   | [ |- ?a       -> ?c ] => intro H
-   | [ |- ~?a -> _ ] => intro H
-   | [ |- _ -> _ ] => intro H
-   | [ |- ~~?a ] => intro H
-   | _ => idtac "[appropriate error message]"
-   end.
-   (* || FAILED H. *)
-
-Ltac Pose D For N :=
+Ltac raw_pose D N :=
   let H := fresh "H0" in 
     let H' := fresh "H0" in 
       match D with
@@ -154,6 +122,8 @@ Ltac Pose D For N :=
             | ~D => idtac "You cannot pose that" D
             | _ => idtac "Not matching" D N
       end.
+
+Tactic Notation "Pose" constr(A) "For" constr(B) := raw_pose A B.
 
 Ltac Simp_right C :=
    let H := fresh "H0" in
@@ -170,3 +140,77 @@ Ltac Solve_With H :=
 
 Ltac Split_Eq :=
   split || idtac "Cannot Split a non conjuctive statement".
+
+(**
+Tactics that reflect the inference rules in Hein 6.3.1
+*)
+
+
+Ltac Conditional_Proof :=
+   Universal_Intros;
+   let H := fresh "H0" in
+   let tmp := fresh "tmp" in
+   match goal with
+   (* Hein has one incredibly bizarre usage of CP on page ... (Todo) *)
+   | [ |- ?a /\ ?b -> ?c ] => intros [H tmp]; generalize tmp; clear tmp
+   (* The typical usage *)
+   | [ |- ?a       -> ?c ] => intro H
+   (* Todo: why is this here? *)
+   | [ |- ~?a -> _ ] => intro H
+   (* Todo: why is this here? *)
+   | [ |- _ -> _ ] => intro H
+   (* Todo: why is this here? *)
+   | [ |- ~~?a ] => intro H
+   (* Error handling *)
+   | _ => idtac "[appropriate error message]"
+   end.
+   (* || FAILED H. *)
+
+Ltac CP := Conditional_Proof.
+
+(** A → B, A ⊦ B *)
+Ltac Modus_Ponens f x :=
+   let H := fresh "H0" in
+   let Tf := type of f in
+   match Tf with
+   | ?A -> ?B => idtac "A";
+                 let Tx := type of x in
+                 match Tx with
+                 | A => assert (H : Tf); [ apply  (f x) | ]
+                 | _ => idtac "The antecedent (" A ") of the implication (" f ":" Tf ")  does not match the type (" Tx ")"
+                 end
+   | ?T        => idtac f "must refer to an implication (of the form _ -> _), but instead has the form " T
+   end.
+
+Ltac MP f x := Modus_Ponens f x.
+
+(** A → B, ~B ⊦ ~A *)
+Ltac Modus_Tollens H N := 
+  let C := fresh "H0" in
+  let X := fresh "X" in
+    let TH := type of H in  
+      match TH with
+        | ?p -> ?q => 
+          match type of N with
+            (* This line is erroneous: it does an in-place substitution of one negation with another. 
+            | ~q => assert (C: ~q -> ~p); intros; [tauto |] ; apply C in N; clear C
+            * instead, we want to add a new hypothesis *)
+            | ~q => assert (C: ~p); [ intro X; apply N; apply H; apply X | ]
+            | ?T => idtac T "is not a negation of " q
+          end
+        | ?T => idtac "the first argument (" H ") needs to be an implication (_ -> " 
+      end.
+
+Ltac MT H N := Modus_Tollens H N.
+
+(** Conj:  A, B ⊦ A ∧ B *)
+(** Simp:  A ∧ B ⊦ A *)
+(** Simp:  A ∧ B ⊦ B *)
+(** Add:   A ⊦ A ∨ B *)
+(** Add:   B ⊦ A ∨ B *)
+(** DS:    A∨B, ~A ⊦ B *)
+(** HS:    A→B, B→C ⊦ A→C *)
+(** CD:    A∨B, A→C, B→D ⊦ C∨D *)
+(** CD:    A∨B, A→C, B→D ⊦ C∨D *)
+
+
