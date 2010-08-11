@@ -29,16 +29,29 @@ Ltac Addition2 H B :=
    let A := type of H in
    assert (H' : B \/ A); [ right; try assumption | ].
 
+(** Hein's "Proof by Cases", derived rule on p434 *)
+(** Todo: this tactic introduces a spurious duplicate hypothesis called "x" -- remove it if possible, or parse around it *)
+Ltac Case A :=
+  let H := fresh "H0" in
+  refine (match A with
+          | or_introl x => _ x
+          | or_intror x => _ x
+          end); intro H.
+
+(*
 Ltac Case A :=
   let H := fresh "H0" in
     let H' := fresh "H0" in
       destruct A as [H | H'].
+*)
 
-Ltac Contr A B:= 
-  apply (A B) || apply (B A) ||
-    let TA := type of A in
-      let TB := type of B in 
-          fail "In order to contradict" TA "you can provide ~"TA ", in order to contradict" TB "you can provide ~"TB.
+Ltac Contr A B :=
+  let H := fresh "H0" in
+           (assert (H:False) ; [ exact (A B) | ] )
+        || (assert (H:False) ; [ exact (B A) | ] )
+        || let TA := type of A in
+           let TB := type of B in 
+           idtac "In order to contradict" TA "you can provide ~"TA ", in order to contradict" TB "you can provide ~"TB.
 
 
 Ltac Conj L R :=
@@ -87,13 +100,10 @@ Ltac DN H :=
   Universal_Intros;
   let H1 := fresh "H0" in
   match type of H with
-    | ?A' => 
-      match A' with
-        | ~~_ => apply NNPP in H; try assumption
-      end
+    | ~~?A => assert (H1:A); [ apply Classical_Prop.NNPP ; assumption | ]
     (* | H => intros H1; apply H1; try assumption *)
     | _ => idtac "Double Negation can not solve this problem" H
-end.
+  end.
 
 
 Ltac Disjunc A B :=
@@ -143,6 +153,9 @@ Ltac Split_Eq :=
 
 (**
 Tactics that reflect the inference rules in Hein 6.3.1
+p422
+
+
 *)
 
 
@@ -173,12 +186,8 @@ Ltac Modus_Ponens f x :=
    let H := fresh "H0" in
    let Tf := type of f in
    match Tf with
-   | ?A -> ?B => idtac "A";
-                 let Tx := type of x in
-                 match Tx with
-                 | A => assert (H : Tf); [ apply  (f x) | ]
-                 | _ => idtac "The antecedent (" A ") of the implication (" f ":" Tf ")  does not match the type (" Tx ")"
-                 end
+   | ?A -> ?B => let Tx := type of x in
+                 (assert (H : B); [ exact  (f x) | ]) || idtac "The antecedent (" A ") of the implication (" f ":" Tf ")  does not match the type (" Tx ")"
    | ?T        => idtac f "must refer to an implication (of the form _ -> _), but instead has the form " T
    end.
 
@@ -203,12 +212,18 @@ Ltac Modus_Tollens H N :=
 
 Ltac MT H N := Modus_Tollens H N.
 
-(** Conj:  A, B ⊦ A ∧ B *)
-(** Simp:  A ∧ B ⊦ A *)
-(** Simp:  A ∧ B ⊦ B *)
-(** Add:   A ⊦ A ∨ B *)
-(** Add:   B ⊦ A ∨ B *)
-(** DS:    A∨B, ~A ⊦ B *)
+(** Original Rules *)
+(** Conjunction:               A, B ⊦ A ∧ B *)
+(** Simplification L:         A ∧ B ⊦ A *)
+(** Simplification R:         A ∧ B ⊦ B *)
+(** Addition L:                   A ⊦ A ∨ B *)
+(** Addition R:                   B ⊦ A ∨ B *)
+(** Disjunctive Syllogism:  A∨B, ~A ⊦ B *)
+(** Double Negation E:          ~~A ⊦ A *)
+(** Double Negation I:            A ⊦ ~~A *)
+(** Contradiction:            A, ~A ⊦ False *)
+(** Indirect Proof: from ~A derive False ... conclude A *)
+
 (** HS:    A→B, B→C ⊦ A→C *)
 (** CD:    A∨B, A→C, B→D ⊦ C∨D *)
 (** CD:    A∨B, A→C, B→D ⊦ C∨D *)
