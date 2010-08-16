@@ -30,7 +30,7 @@ Other things:
   - The tactic language Ltac allows us to give very good diagnostic
     messages when a student tries something inappropriate. (see DS).
   - We'd have to categorize the tactics as forward reasoning (eg Cong),
-    backward reasoning (bwd_Add), and mixed (P_with_CP).  Might be
+    backward reasoning (Addition), and mixed (Conditional_Proof).  Might be
     initially confusing, but it's a good thing for students to
     understand
 
@@ -60,13 +60,13 @@ Require Export HypLemmas.
 (*   split; intro; destruct H; [right | left | right | left]; assumption. Qed. *)
 
 (* Example ds_unit_1 P Q:  (P\/Q) -> (~P->Q).  *)
-(* P_with_CP. P_with_CP. DS H1 H2. Qed. *)
+(* Conditional_Proof. Conditional_Proof. DS H1 H2. Qed. *)
 
 (* Example ds_unit_2 P Q:  (~P\/Q) -> (P->Q).  *)
-(* P_with_CP. P_with_CP. DS H1 H2. Qed. *)
+(* Conditional_Proof. Conditional_Proof. DS H1 H2. Qed. *)
 
 (* Example ds_unit_3 P Q:  (P\/Q) -> (~Q -> P).  *)
-(* P_with_CP. P_with_CP. DS H1 H2. Qed. *)
+(* Conditional_Proof. Conditional_Proof. DS H1 H2. Qed. *)
 
 (* Example ds_unit_4 P Q:  (P\/~Q) -> (Q -> P).  *)
-(* P_with_CP. P_with_CP. DS H1 H2. Qed. *)
+(* Conditional_Proof. Conditional_Proof. DS H1 H2. Qed. *)
