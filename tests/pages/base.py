@@ -22,3 +22,7 @@ class Page(object):
     def click_signup_link(self):
         button = browser.document['#signup']
         button.click('page')
+
+    def click_submit(self):
+        button = browser.document["input[type='submit'][value='login']"][0]
+        button.click('page')

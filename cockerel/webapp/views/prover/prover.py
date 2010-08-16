@@ -7,27 +7,55 @@ from uuid import uuid4
 from flask import (
     g,
     Module,
-    url_for,
     render_template,
     request,
     session,
+    url_for,
     )
 
 from cockerel.models.schema import Proof, Theorem
+from cockerel.webapp.views.util import login_required
 
 prover = Module(__name__)
 
 
+class ProofException(Exception):
+    """Identifier for proof exceptions"""
+    pass
+
+
 def readscript(script):
-    '''Chew up blank lines'''
-    return [x for x in script.splitlines() if not x == '']
+    """Chew up blank lines, and be a little lame about it"""
+    return [x.strip() + '.' for x in script.strip().rsplit(r'.')
+            if not x == u'']
 
 
-def formatscript(script, slice):
+def exec_cmd(command, session):
+    host = g.config.get('COQD_HOST')
+    port = g.config.get('COQD_PORT')
+
+    try:
+        tn = telnetlib.Telnet(host, port)
+        tn.write(JSONEncoder().encode(dict(userid=str(session['id']),
+                                           command=command)))
+        proofst = JSONDecoder().decode(tn.read_all())
+        return proofst.get('response', None)
+
+    except Exception:
+        logging.error("Connection to coqd failed")
+        raise ProofException()
+
+
+def get_proofscript(request):
+    proofscript = request.form.get('proofscript')
+    return formatscript(proofscript)
+
+
+def formatscript(script):
     commandlist = readscript(script)
-    processed = '\\n'.join(commandlist[:slice])
-    unprocessed = '\\n'.join(commandlist[slice:])
-    return processed, unprocessed, commandlist
+    theorem = commandlist[0]
+    proof = '\\n'.join(commandlist[1:])
+    return theorem, proof, commandlist
 
 
 def hash_theorem(theorem):
@@ -35,75 +63,64 @@ def hash_theorem(theorem):
 
 
 def ping_coqd():
+    """check the coqd server is alive"""
     pass
 
 
-@prover.route('/prover', methods=['GET', 'POST'])
-def editor():
-    proofst = None
-    host = g.config.get('COQD_HOST')
-    port = g.config.get('COQD_PORT')
+@prover.route('/prover/', methods=['GET'])
+@prover.route('/prover/<int:theorem_id>', methods=['GET', 'POST'])
+@login_required
+def editor(theorem_id=0):
+    proofst = processed = None
     lineno = 0
+    theorem = Theorem.query.filter_by(id=theorem_id).first()
+
+    if theorem:
+        theorem_text = theorem.text.rstrip()
+        proof = Proof.query.filter_by(theorem=theorem).filter_by(
+            user_id=g.user.id).first()
+
+        if not proof:
+            proof = ""
+
+    else:
+        theorem_text = proof = ""
+
+    unprocessed = ''.join([theorem_text, proof])
 
     if request.method == 'POST':
         if not session.get('id'):
             session['id'] = uuid4()
 
         if request.form.get('clear'):
+            processed, unprocessed, commandlist = get_proofscript(request)
             command = 'quit'
-            proofscript = request.form.get('proofscript')
-            processed, unprocessed, commandlist = formatscript(proofscript, 0)
             processed = None
+            unprocessed = '\\n'.join([theorem_text, unprocessed])
 
         elif request.form.get('undo'):
             lineno = 0 if lineno == 0 else int(request.form.get('line')) - 1
-            proofscript = request.form.get('proofscript')
-            processed, unprocessed, commandlist = formatscript(proofscript,
-                                                               lineno)
+            processed, unprocessed, commandlist = get_proofscript(request)
             command = 'Undo.'
 
         else:
             lineno = int(request.form.get('line'))
-            proofscript = request.form.get('proofscript')
-            processed, unprocessed, commandlist = formatscript(proofscript,
-                                                  lineno)
+            processed, unprocessed, commandlist = get_proofscript(request)
             command = commandlist[lineno]
             logging.debug('Sending %d : %s', lineno, command)
             lineno += 1
+
         # here is where we'll pass it to coqd
         if command:
             try:
-                tn = telnetlib.Telnet(host, port)
-                tn.write(JSONEncoder().encode(dict(userid=str(session['id']),
-                                               command=command)))
-
-                proofst = JSONDecoder().decode(tn.read_all())
-                proofst = proofst.get('response', None)
-
-            except Exception:
+                proofst = exec_cmd(command, session)
+            except ProofException:
                 lineno = lineno - 1 if lineno != 0 else 0
-                logging.error("Connection to coqd failed")
 
-        return render_template('prover/prover.html',
-                               prover_url=url_for('editor'),
-                               processed=processed,
-                               unprocessed=unprocessed,
-                               proofst=proofst,
-                               lineno=lineno)
-    else:
-        # new proof session so set it up
-        unprocessed = request.args.get('theorem', "")
-        theorem = Theorem.query.filter_by(id=unprocessed).one()
-        if theorem:
-            text = theorem.text.rstrip()
-            proof = Proof.query.filter_by(theorem=theorem).first()
-            if not proof:
-                proof = ""
-        else:
-            theorem = proof = ""
-        return render_template('prover/prover.html',
-                               prover_url=url_for('editor'),
-                               proofst=proofst,
-                               processed=None,
-                               unprocessed=''.join([text,proof]),
-                               lineno=lineno)
+    return render_template('prover/prover.html',
+                           prover_url=url_for('editor',
+                                              theorem_id=theorem_id),
+                           proofst=proofst,
+                           processed=processed,
+                           unprocessed=unprocessed,
+                           lineno=lineno)

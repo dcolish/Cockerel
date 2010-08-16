@@ -14,3 +14,5 @@ def test_login():
     login = page.login_form
     login.fill(dict(username='test',
                     password='user'))
+    page.click_submit()
+    assert not page.offers_login_form

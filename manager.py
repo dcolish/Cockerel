@@ -1,5 +1,6 @@
 from flaskext.script import Manager, Server, Shell
 
+from coqd.runner import main as coqd_main
 from cockerel.webapp import app, db
 from cockerel.models import schema
 
@@ -17,6 +18,12 @@ manager.add_command("runserver", Server())
 def initdb():
     db.drop_all()
     db.create_all()
+
+
+@manager.command
+def runcoqd():
+    coqd_main()
+
 
 if __name__ == "__main__":
     manager.run()

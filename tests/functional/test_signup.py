@@ -1,6 +1,6 @@
 from tests.functional import browser, testcase
 from tests.pages.base import Page
-from tests.pages.admin import Login, Signup
+from tests.pages.admin import Signup
 
 
 @testcase()
@@ -17,5 +17,3 @@ def test_signup():
     foo.fill(dict(username='yermom', password='foobar'))
     foo.submit()
     assert not page.offers_signup_link
-
-
