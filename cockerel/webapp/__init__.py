@@ -19,7 +19,7 @@ db = SQLAlchemy(app)
 md = Markdown(app, extensions=['tables'])
 
 from .views.prover.mdx_prover import ProverExtension
-md.registerExtension(ProverExtension)
+md.register_extension(ProverExtension)
 
 from .views.admin import admin
 from .views.classes import classes

@@ -55,7 +55,7 @@ setup(name="cockerel",
 
       install_requires=[
         'flask',
-        'Flask-Markdown==dev',
+        'Flask-Markdown==0.3',
         'Flask-SQLAlchemy',
         'Flask-Script',
         'flatland',
