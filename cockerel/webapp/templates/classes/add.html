@@ -1,8 +1,8 @@
 <form id="f_add_class" action="" method='POST'>
 <dl>
-  <dt>Class Name</dt>
+  <dt>{{ form.classname.label }}</dt>
   <dd>{{ html.input(form['classname']) }}</dd>
-  <dt>Description</dt>
+  <dt>{{ form.description.label }}</dt>
   <dd>{{ html.textarea(form['description']) }}</dd>
 </dl>
 <p>{{ html.input(type='submit', value='add') }}</p>
