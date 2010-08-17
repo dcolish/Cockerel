@@ -38,7 +38,7 @@ class ProverPreprocessor(markdown.preprocessors.Preprocessor):
                     '(?P<end>^>{3,})[ ]*$',
                     re.MULTILINE | re.DOTALL)
     WRAP = """
-<a class="proofscript" href="/prover?{url}"><pre>{proof}</pre></a>"""
+<a class="proofscript" href="/prover/{id}"><pre>{proof}</pre></a>"""
 
     def __init__(self, md):
         markdown.preprocessors.Preprocessor.__init__(self, md)
@@ -58,7 +58,7 @@ class ProverPreprocessor(markdown.preprocessors.Preprocessor):
                     db.session.add(theorem)
                     db.session.commit()
                 proof = self.WRAP.format(
-                    url=urlencode(dict(theorem=theorem.id)),
+                    id=theorem.id,
                     proof=self._escape(theorem.text))
 
                 placeholder = self.markdown.htmlStash.store(proof, safe=True)
