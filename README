@@ -1,16 +1,21 @@
+For fuller, more recent documentation on Cockerel go to:
+  http://packages.python.org/cockerel
+
 1. Introduction
 ----------------------------------------
 
- Cockerel is a web based interactive mathematical lesson planner. It allows
- instructors to create mathematical lesson plans using wiki markup and then
+ Cockerel is a web based interactive logic lesson planner. It allows
+ instructors to create logic lesson plans using wiki markup and then
  assign these to students.
 
+Cockerel runs two processes: 'cockerel' is the the webserver, and 'coqd' is
+the daemon connecting 'cockerel' to the theorem prover Coq.
 
-This code base will be extremely unstable over the summer. If you plan on using
-it send me a message.
+This code base will be extremely unstable over the summer of 2010. If you
+plan on using it send me (Dan Colish) a message.
 
 
-2. Instructions for Installing
+2. Using Cockerel -- Instructions for Installing
 ----------------------------------------
 
 If you would like to run this software you must have Coq >= 8.2pl1
@@ -37,10 +42,10 @@ To start Cockerel run
 To start Coqd run
         coqd
 
-The Cockerel webpage will be at http://localhost:5000 by default
+The Cockerel webpage will, by default, be at
+  http://localhost:5000
 
-
-3. Developing Cockerel
+3. Developing Cockerel -- Instructions for Installing
 --------------------------------------
 
 For developing with Cockerel you should checkout the latest tree from github:
@@ -53,4 +58,10 @@ Then
     . some_env_path/bin/activate
     python setup.py develop
 
-easy_install will now download all dependencies for the project.
+
+As part of the the last command, easy_install downloads all dependencies for
+the project.  As of 2010 Aug 16, you may have to must repeat:
+
+    python setup.py develop
+
+if the first call failed to install flask.
