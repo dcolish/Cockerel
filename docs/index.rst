@@ -84,17 +84,17 @@ shell commands to control the program output. In order to stop them
 you will eventually need to foreground them again and press Ctrl-C. A
 session could look something like this::
    
-   (dev_env)blackbox:Cockerel ∈ ζ cockerel > cockerel.log 2>&1 &
-   [1] 4199
-   (dev_env)blackbox:Cockerel ∈ ζ coqd > coqd.log 2>&1 &
-   [2] 4211
-   (dev_env)blackbox:Cockerel ∈ ζ jobs
-   [1]-  Running                 cockerel > cockerel.log 2>&1 &
-   [2]+  Running                 coqd > coqd.log 2>&1 &
-   (dev)blackbox:Cockerel ∈ ζ fg %1
-   cockerel > cockerel.log 2>&1 #NOW PRESS Ctrl-C to stop
-   (dev)blackbox:Cockerel ∈ ζ fg %2
-   coqd > coqd.log 2>& #NOW PRESS Ctrl-C to stop
+   cockerel > cockerel.log 2>&1 &
+   # [1] 4199
+   coqd > coqd.log 2>&1 &
+   # [2] 4211
+   jobs
+   # [1]-  Running                 cockerel > cockerel.log 2>&1 &
+   # [2]+  Running                 coqd > coqd.log 2>&1 &
+   fg %1
+   #NOW PRESS Ctrl-C to stop => cockerel > cockerel.log 2>&1 
+   fg %2
+   #NOW PRESS Ctrl-C to stop => coqd > coqd.log 2>& 
 
 
 
