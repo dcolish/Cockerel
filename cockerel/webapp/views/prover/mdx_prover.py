@@ -10,7 +10,7 @@ A simple example:
   Goal True -> True.
   >>>
 """
-from urllib import urlencode
+
 import re
 import markdown
 

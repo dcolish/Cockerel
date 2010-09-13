@@ -66,6 +66,9 @@ class CoqProtocol(Protocol):
 
     active_conns = {}
 
+    def connectionMade(self):
+        self.serialize = self.factory.serialize
+
     def dataReceived(self, data):
         """
         Parse data we've recieved and send to proof engine
@@ -76,8 +79,14 @@ class CoqProtocol(Protocol):
         command = req_data.get('command')
         userid = req_data.get('userid')
         resp_data = self.handle_command(userid, command)
-        resp_data['response'] = self.do_parse(resp_data['response'])
-        self.transport.write(JSONEncoder().encode(resp_data))
+
+        data = resp_data['response']
+
+        if self.serialize:
+            resp_data['response'] = self.do_parse(resp_data['response'])
+            data = JSONEncoder().encode(resp_data)
+
+        self.transport.write(data)
         self.transport.loseConnection()
 
     def do_parse(self, output):

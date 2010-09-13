@@ -2,7 +2,6 @@ include README
 include LICENSE 
 recursive-include tests *
 recursive-exclude tests *.pyc
-recursive-exclude tests *.pyc
 recursive-include docs *
 recursive-exclude docs *.pyc
 recursive-exclude docs *.pyo

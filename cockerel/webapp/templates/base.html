@@ -5,11 +5,14 @@
   <head>
     <title>Cockerel Logic Checker - {% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="/static/site.css" />
-    <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAA8Iq3w1LF6TgIDgZx7RQ_cRT7g5bZECU_gqoByQmzcFSTeCxKshRn_ZMRy-gSPjQ8nSSldSReJClRvA"></script>
+    <script type="text/javascript" 
+            src="http://www.google.com/jsapi?key=ABQIAAAA8Iq3w1LF6TgIDgZx7RQ_cRT7g5bZECU_gqoByQmzcFSTeCxKshRn_ZMRy-gSPjQ8nSSldSReJClRvA"></script>
     <script>
       google.load('jquery', '1.4.2');
     </script>
-    <script type="text/javascript" language="javascript" src="http://colishcloud.appspot.com/static/codemirror/js/codemirror.js" ></script>
+    <script type="text/javascript"
+            language="javascript"
+            src="http://colishcloud.appspot.com/static/codemirror/js/codemirror.js" ></script>
     <!-- <script type="text/javascript" language="javascript" src="/static/cockerel.js"></script> -->
   </head>
   <body>
@@ -39,8 +42,14 @@
     <div id="footer">
       {% block footer %}
       {% endblock %}
-      <p>Copyright 2010 by Dan Colish</p>
+      <a href="http://flask.pocoo.org/">
+        <img
+            src="http://flask.pocoo.org/static/badges/powered-by-flask-s.png"
+            border="0"
+            alt="powered by Flask"
+            title="powered by Flask" />
+          </a>
+          <p>Copyright 2010 by Dan Colish</p>
     </div>
-    
   </body>
 </html>
