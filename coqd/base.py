@@ -11,7 +11,11 @@ class CoqProc(Process):
     """Handles the shell process conncetion"""
     def start(self):
         """Execs a new child for coqtop"""
-        self.process = spawn('coqtop', ['-emacs-U'])
+        self.process = spawn('coqtop', [
+                '-I coqext/hypreason/',
+                '-require HypReason',
+                '-emacs-U',
+                ])
 
     def run(self, conn):
         """Attempts to connect with the fork and send a command"""
