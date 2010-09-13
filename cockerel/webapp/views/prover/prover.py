@@ -38,8 +38,13 @@ def exec_cmd(command, session):
         tn = telnetlib.Telnet(host, port)
         tn.write(JSONEncoder().encode(dict(userid=str(session['id']),
                                            command=command)))
-        proofst = JSONDecoder().decode(tn.read_all())
-        return proofst.get('response', None)
+
+        if g.config.get('serialize'):
+            proofst = JSONDecoder().decode(tn.read_all())
+            data = proofst.get('response', None)
+        else:
+            data = tn.read_all()
+        return data
 
     except Exception:
         logging.error("Connection to coqd failed")

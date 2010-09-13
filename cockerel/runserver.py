@@ -1,11 +1,14 @@
 from cockerel.webapp import app
 
 
-def new_app():
+def new_app(serialize):
+    if serialize:
+        app.config['serialize'] = serialize
     return app
 
 
-def main():
+def main(serialize):
+    new_app(serialize)
     app.debug = True
     app.run()
 

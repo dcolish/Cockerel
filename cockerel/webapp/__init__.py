@@ -46,3 +46,9 @@ def update_config():
     g.config = app.config
 
 app.before_request(update_config)
+
+
+def new_app(serialize):
+    if serialize:
+        app.config['serialize'] = serialize
+    return app
