@@ -18,6 +18,7 @@ class CoqProc(Process):
             ]
         self.process = spawn(' '.join(['coqtop'] + args))
 
+        # XXX: Bug in pexpect doesn't let this work
         # self.process = spawn('coqtop', [
         #         '-include ./coqd/coqext/hypreason/',
         #         '-require HypReason',

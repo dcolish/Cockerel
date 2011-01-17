@@ -1,0 +1,13 @@
+Cockerel TODO List for Winter Break
+
+* Features
+** Choose between simplifying radically or finishing users
+** Add config object for setting basic server options (command line options too?)
+** Clean up editor interface and display output correctly
+
+* Testing
+** Setup automated test runner
+** Develop more tests
+
+* Packaging
+** Debianize the whole thang

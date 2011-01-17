@@ -10,7 +10,7 @@ from flask import (
 from flatland.out.markup import Generator
 
 from cockerel.models.schema import db, User
-from .forms.admin import LoginForm, SignupForm
+from cockerel.webapp.forms import LoginForm, SignupForm
 
 admin = Module(__name__)
 

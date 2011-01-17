@@ -21,11 +21,11 @@ md = Markdown(app, extensions=['tables'])
 from .views.prover.mdx_prover import ProverExtension
 md.register_extension(ProverExtension)
 
-from .views.admin import admin
-from .views.classes import classes
-from .views.frontend import frontend
-from .views.lessons import lessons
-from .views.prover.prover import prover
+from .views import admin
+from .views import classes
+from .views import frontend
+from .views import lessons
+from .views import prover
 from .utils import register_modules
 
 register_modules(app, [admin, classes, frontend, lessons, prover])
@@ -44,8 +44,6 @@ if not os.path.exists(app.config.get('SQLALCHEMY_DATABASE_URI')):
 def update_config():
     """syncronizes the config with the g global request object"""
     g.config = app.config
-
-app.before_request(update_config)
 
 
 def new_app(serialize):

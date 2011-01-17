@@ -16,10 +16,9 @@ from flask import (
     )
 from flatland.out.markup import Generator
 
-from util import login_required
-
 from cockerel.models.schema import db, Classes
-from .forms.classes import AddEditClassForm
+from cockerel.webapp.auth import login_required
+from cockerel.webapp.forms import AddEditClassForm
 
 classes = Module(__name__)
 
@@ -28,7 +27,7 @@ classes = Module(__name__)
 def index():
     """Shows all classes currently in the system"""
     classes = Classes.query.all()
-    return render_template("/classes/index.html", classes=classes)
+    return render_template("classes/index.html", classes=classes)
 
 
 @classes.route('/classes/add', methods=['GET', 'POST'])
