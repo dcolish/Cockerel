@@ -1,15 +1,18 @@
+from functools import partial
 from flaskext.script import Manager, Server, Shell
+from werkzeug import create_environ
 
 from coqd.runner import main as coqd_main
-from cockerel.webapp import app, new_app, db
-from cockerel.models import schema
+from cockerel.webapp import app
+from cockerel.utilities import new_app
+from cockerel.models import db, schema
 
 
 def _make_context():
-    return dict(app=app, db=db, models=schema)
+    return dict(app=new_app(app), db=db, models=schema)
 
 
-manager = Manager(new_app)
+manager = Manager(partial(new_app, app))
 manager.add_command("shell", Shell(make_context=_make_context))
 manager.add_command("runserver", Server())
 manager.add_option('--serialize',  action="store_true",
@@ -18,8 +21,10 @@ manager.add_option('--serialize',  action="store_true",
 
 @manager.command
 def initdb():
-    db.drop_all()
-    db.create_all()
+    # A request_context is required to use these helper functions
+    with new_app(app).request_context(create_environ()):
+        db.drop_all()
+        db.create_all()
 
 
 @manager.option('--serialize',  action="store_true",

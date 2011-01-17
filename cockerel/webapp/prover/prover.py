@@ -14,7 +14,7 @@ from flask import (
     )
 
 from cockerel.models.schema import Proof, Theorem
-from cockerel.webapp.views.util import login_required
+from cockerel.auth import login_required
 
 prover = Module(__name__)
 
