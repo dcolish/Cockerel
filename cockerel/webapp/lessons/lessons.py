@@ -9,7 +9,7 @@ from flask import (
 from flatland.out.markup import Generator
 
 from cockerel.auth import login_required
-from cockerel.webapp.forms import EditLessonForm
+from cockerel.forms import EditLessonForm
 from cockerel.models.schema import db, Classes, Lesson
 
 lessons = Module(__name__)

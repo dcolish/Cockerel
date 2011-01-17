@@ -10,8 +10,8 @@ from flask import g, session
 from flaskext.principal import Identity
 
 
-from pdxacm.webapp import principals
-from pdxacm.models.schema import User
+from .permissions import principals
+from cockerel.models.schema import User
 
 
 def check_user():

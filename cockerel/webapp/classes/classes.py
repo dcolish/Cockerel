@@ -16,9 +16,9 @@ from flask import (
     )
 from flatland.out.markup import Generator
 
-from cockerel.models.schema import db, Classes
 from cockerel.auth import login_required
-from cockerel.webapp.forms import AddEditClassForm
+from cockerel.forms import AddEditClassForm
+from cockerel.models.schema import db, Classes
 
 classes = Module(__name__)
 
