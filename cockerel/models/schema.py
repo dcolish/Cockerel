@@ -55,6 +55,7 @@ class User(db.Model):
     email = db.Column(db.String(80))
     firstname = db.Column(db.String(80))
     lastname = db.Column(db.String(80))
+    activeStatus = db.Column(db.String(80))
     # permissions = db.Column(db.Integer)
     proofs = db.relationship('Proof',
                              order_by=Proof.id,
@@ -63,6 +64,12 @@ class User(db.Model):
     def __init__(self, username, password):
         self.username = username
         self.set_password(password)
+
+    def __init__(self, username, password, email, firstname, lastname):
+        self.__init__(username, password)
+        self.email = email
+        self.firstname = firstname
+        self.lastname = lastname
 
     def set_password(self, password):
         self.pw_hash = generate_password_hash(password)

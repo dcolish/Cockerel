@@ -1,5 +1,5 @@
 from flatland import Form, String
-from flatland.validation import IsEmail, Present
+from flatland.validation import IsEmail, Present, LengthBetween, ValuesEqual
 
 
 class LoginForm(Form):
@@ -13,7 +13,11 @@ class SignupForm(Form):
     username = String.using(label='Username',
                             validators=[Present()])
     password = String.using(label='Password',
-                            validators=[Present()])
+                            validators=[Present(), 
+                                        LengthBetween(5, 25)])
+    confirmPassword = String.using(label='Confirm Password',
+                            validators=[Present(),
+                                        ValuesEqual('.', '../password')])
     email = String.using(label='Email',
                          validators=[Present(), IsEmail()])
     firstname = String.using(label='First Name',
@@ -21,4 +25,4 @@ class SignupForm(Form):
     lastname = String.using(label='Last Name',
                             validators=[Present()])
 
-    output_schema = ['username', 'password', 'email', 'firstname', 'lastname']
+    output_schema = ['username', 'password', 'confirmPassword', 'email', 'firstname', 'lastname']

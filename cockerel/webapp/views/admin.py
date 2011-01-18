@@ -58,14 +58,24 @@ def logout():
 @admin.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        user = User(request.form['username'],
-                   request.form['password'])
-
-        db.session.add(user)
-        db.session.commit()
-        g.user = user
-        set_user()
-        return redirect(url_for('frontend.index'))
+        form = SignupForm.from_flat(request.form)
+        if form.validate():
+            user = User(request.form['username'],
+                       request.form['password'],
+                       request.form['email'],
+                       request.form['firstname'],
+                       request.form['lastname'])
+    
+            db.session.add(user)
+            db.session.commit()
+            g.user = user
+            set_user()
+            return redirect(url_for('frontend.index'))
+        else:
+            gen = Generator()
+            return render_template("admin/signup.html", 
+                                   form=form, 
+                                   html=gen)
     form = SignupForm()
     gen = Generator()
     return render_template("admin/signup.html",
@@ -80,6 +90,9 @@ def check_user():
 
 def set_user():
     session['username'] = g.user.username
+    session['userFristname'] = g.user.firstname
+    session['userLastname'] = g.user.lastname
+    session['userEmail'] = g.user.email
 
 
 admin.before_app_request(check_user)
