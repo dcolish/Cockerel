@@ -16,7 +16,7 @@ import markdown
 
 from sqlalchemy.orm.exc import NoResultFound
 
-from cockerel.webapp import db
+from cockerel.models import db
 from cockerel.models.schema import Theorem
 from .prover import hash_theorem
 

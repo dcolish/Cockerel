@@ -1,6 +1,5 @@
-# #
-# from flaskext.sqlalchemy import SQLAlchemy
+from flaskext.sqlalchemy import SQLAlchemy
 
-# from webapp import 
+db = SQLAlchemy()
 
-# db = SQLAlchemy(app)
+__all__ = ['db']

@@ -9,7 +9,7 @@ parser.out
 *.vo
 *.glob
 *.d
-coqext/hypreason/Makefile
+coqd/coqext/hypreason/Makefile
 *.v.d
 *.egg-info
 docs/_build

@@ -1,6 +1,7 @@
 For fuller, more recent documentation on Cockerel go to:
   http://packages.python.org/cockerel
 
+
 1. Introduction
 ----------------------------------------
 
@@ -32,18 +33,20 @@ into. This can be done with:
 
         virtualenv some_env_path
         . some_env_path/bin/activate
-        easy_install Cockerel
+        pip install Cockerel
 
 where 'Cockerel' is the directory where the repository resides.
 
 To start Cockerel run
-        cockerel
+    python manager.py initd
+    python manager.py runserver
      
 To start Coqd run
-        coqd
+    python manager.py runcoqd
 
 The Cockerel webpage will, by default, be at
   http://localhost:5000
+
 
 3. Developing Cockerel -- Instructions for Installing
 --------------------------------------
@@ -59,7 +62,7 @@ Then
     python setup.py develop
 
 
-As part of the the last command, easy_install downloads all dependencies for
+As part of the the last command, easy_install/pip downloads all dependencies for
 the project.  As of 2010 Aug 16, you may have to must repeat:
 
     python setup.py develop

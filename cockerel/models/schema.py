@@ -1,5 +1,6 @@
 from werkzeug import generate_password_hash, check_password_hash
-from cockerel.webapp import db
+
+from . import db
 
 
 user_classes = db.Table('user_classes', db.Model.metadata,

@@ -8,8 +8,8 @@ from flask import (
     )
 from flatland.out.markup import Generator
 
-from util import login_required
-from .forms.lessons import EditLessonForm
+from cockerel.auth import login_required
+from cockerel.forms import EditLessonForm
 from cockerel.models.schema import db, Classes, Lesson
 
 lessons = Module(__name__)

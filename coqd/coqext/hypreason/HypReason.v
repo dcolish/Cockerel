@@ -52,9 +52,9 @@ Related work.
 
 
 Require Export HypError.
-Require Export HypNotation.
+(* Require Export HypNotation. *)
 Require Export HypTactics.
-Require Export HypLemmas.
+(* Require Export HypLemmas. *)
 
 (* Example or_swaps P Q :(P \/ Q) <-> (Q \/ P).  *)
 (*   split; intro; destruct H; [right | left | right | left]; assumption. Qed. *)

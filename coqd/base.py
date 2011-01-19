@@ -11,7 +11,19 @@ class CoqProc(Process):
     """Handles the shell process conncetion"""
     def start(self):
         """Execs a new child for coqtop"""
-        self.process = spawn('coqtop', ['-emacs-U'])
+        args = [
+            '-include ./coqd/coqext/hypreason/',
+            '-require HypReason',
+            '-emacs-U',
+            ]
+        self.process = spawn(' '.join(['coqtop'] + args))
+
+        # XXX: Bug in pexpect doesn't let this work
+        # self.process = spawn('coqtop', [
+        #         '-include ./coqd/coqext/hypreason/',
+        #         '-require HypReason',
+        #         '-emacs-U',
+        #         ])
 
     def run(self, conn):
         """Attempts to connect with the fork and send a command"""
