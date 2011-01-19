@@ -90,9 +90,6 @@ def check_user():
 
 def set_user():
     session['username'] = g.user.username
-    session['userFristname'] = g.user.firstname
-    session['userLastname'] = g.user.lastname
-    session['userEmail'] = g.user.email
 
 
 admin.before_app_request(check_user)
