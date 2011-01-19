@@ -61,12 +61,9 @@ class User(db.Model):
                              order_by=Proof.id,
                              backref='proofs')
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, email=None, firstname=None, lastname=None):        
         self.username = username
         self.set_password(password)
-
-    def __init__(self, username, password, email, firstname, lastname):
-        self.__init__(username, password)
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
