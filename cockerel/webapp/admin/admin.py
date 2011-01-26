@@ -65,7 +65,7 @@ def signup():
                        request.form['email'],
                        request.form['firstname'],
                        request.form['lastname'])
-    
+
             db.session.add(user)
             db.session.commit()
             g.user = user
@@ -73,8 +73,8 @@ def signup():
             return redirect(url_for('frontend.index'))
         else:
             gen = Generator()
-            return render_template("admin/signup.html", 
-                                   form=form, 
+            return render_template("admin/signup.html",
+                                   form=form,
                                    html=gen)
     form = SignupForm()
     gen = Generator()

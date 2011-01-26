@@ -8,10 +8,9 @@
   <dd>{{ html.input(form[el]) }}</dd>
   {% endif %}  
   {% for error in form[el].errors %} 
-  <label>{{ error }}</label><br> 
-  {% endfor %} 
+  <label for="{{form[el].name}}">{{ error }}</label><br> 
+  {% endfor %}
   {% endfor %}
 </dl>
 {{ html.input(type='submit', value='join!') }}
 </form>
-
