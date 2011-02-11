@@ -68,3 +68,5 @@ the project.  As of 2010 Aug 16, you may have to must repeat:
     python setup.py develop
 
 if the first call failed to install flask.
+
+Update: This should fixed now. Please open an issue in the bug tracker if it still occurs

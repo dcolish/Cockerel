@@ -25,7 +25,8 @@ class Configurator(SafeConfigParser):
 class CoqFactory(ServerFactory):
     protocol = CoqProtocol
 
-    def __init__(self, serialize):
+    def __init__(self, modules, serialize):
+        self.modules = modules
         self.serialize = serialize
 
 
@@ -50,14 +51,7 @@ def main():
     parser = options(parser)
     opts = parser.parse_args(argv[1:])
 
-    if opts.modules:
-        # XXX: actual module loading occurs here
-        pass
-
     logging.info("Coq is starting... hold on")
-    factory = CoqFactory(opts.serialize)
+    factory = CoqFactory(opts.modules, opts.serialize)
     reactor.listenTCP(8003, factory)
     reactor.run()
-
-if __name__ == '__main__':
-    main()

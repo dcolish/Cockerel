@@ -9,21 +9,14 @@ from pexpect import spawn, EOF
 
 class CoqProc(Process):
     """Handles the shell process conncetion"""
-    def start(self):
+    def start(self, modules):
         """Execs a new child for coqtop"""
-        args = [
-            '-include ./coqd/coqext/hypreason/',
-            '-require HypReason',
-            '-emacs-U',
-            ]
-        self.process = spawn(' '.join(['coqtop'] + args))
+        args = ['coqtop']
+        for module in modules:
+            args += ['-include %s' % module]
+        args += ['-emacs-U']
 
-        # XXX: Bug in pexpect doesn't let this work
-        # self.process = spawn('coqtop', [
-        #         '-include ./coqd/coqext/hypreason/',
-        #         '-require HypReason',
-        #         '-emacs-U',
-        #         ])
+        self.process = spawn(' '.join(args))
 
     def run(self, conn):
         """Attempts to connect with the fork and send a command"""
@@ -32,7 +25,6 @@ class CoqProc(Process):
             if conn.poll():
                 cmd = conn.recv()
                 self.process.send(cmd + "\n")
-
             self.process.expect('\<\/prompt\>')
             # Strip out the cmd sent from the output
             result = self.process.before[len(cmd):] + self.process.after + " "

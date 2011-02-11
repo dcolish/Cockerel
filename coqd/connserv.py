@@ -34,11 +34,11 @@ class CoqProtocol(Protocol):
         """
         Talks to the specific backend instance associated with a userid
         """
-        def __init__(self, userid):
+        def __init__(self, userid, modules):
             self.userid = userid
             self.here, self.there = Pipe(duplex=True)
             self.proc = CoqProc()
-            self.proc.start()
+            self.proc.start(modules)
             self.read()
             logging.debug("Coqtop Process started %s", self.proc)
 
@@ -67,6 +67,8 @@ class CoqProtocol(Protocol):
     active_conns = {}
 
     def connectionMade(self):
+        self.serialize = self.factory.serialize
+        self.modules = self.factory.modules
         self.serialize = self.factory.serialize
 
     def dataReceived(self, data):
@@ -110,7 +112,7 @@ class CoqProtocol(Protocol):
             active_sess = self.active_conns.get(userid)
 
             if not active_sess:
-                active_sess = self.ActiveConn(userid)
+                active_sess = self.ActiveConn(userid, self.modules)
                 self.active_conns.update({active_sess.userid: active_sess})
 
             if not active_sess.send(command):

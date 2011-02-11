@@ -1,6 +1,5 @@
 from argparse import ArgumentParser
 from json import JSONDecoder, JSONEncoder
-import readline
 import logging
 from sys import argv
 import telnetlib
@@ -41,8 +40,7 @@ def main():
         try:
             prompt = raw_input(">>> ")
             send(prompt, opts.serialize)
-        except:
-            pass
-
-if __name__ == '__main__':
-    main()
+        except EOFError:
+            break
+        except KeyboardInterrupt:
+            break
