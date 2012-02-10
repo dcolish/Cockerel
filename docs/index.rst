@@ -71,11 +71,11 @@ Begin activating your install::
 Now you will have the commands required to run Cockerel and Coqd in
 your path. To start Cockerel run::
 
-   cockerel
-     
+   python manager.py runserver
+
 To start Coqd run::
 
-   coqd
+   python manager.py coqd
 
 The Cockerel webpage will be at http://localhost:5000 by default. Note
 that both of these commands will run in the foreground of your
