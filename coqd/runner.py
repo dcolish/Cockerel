@@ -49,7 +49,7 @@ def main():
     parser = ArgumentParser(prog="Coqd", description="Options for Coqd",
                             version="Coqd 0.1")
     parser = options(parser)
-    opts = parser.parse_args(argv[1:])
+    opts = parser.parse_args(argv[2:])
 
     logging.info("Coq is starting... hold on")
     factory = CoqFactory(opts.modules, opts.serialize)

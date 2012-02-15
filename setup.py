@@ -44,8 +44,6 @@ setup(name="cockerel",
 
       entry_points={
         'console_scripts': [
-            'cockerel=cockerel.runserver:main',
-            'coqd=coqd.runner:main',
             'coqclient=coqd.interp:main',
             ],
         },
