@@ -27,11 +27,16 @@ def initdb():
         db.create_all()
 
 
+@manager.option("--module", dest="modules", action="append",
+                default=[],
+                help="load modules into coqd, more than one "
+                "can be specified",
+                )
 @manager.option('--serialize',  action="store_true",
                 default=False,
                 help="Serialize output to JSON")
-def runcoqd(serialize):
-    coqd_main()
+def runcoqd(modules, serialize):
+    coqd_main(modules, serialize)
 
 
 if __name__ == "__main__":

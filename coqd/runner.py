@@ -30,28 +30,12 @@ class CoqFactory(ServerFactory):
         self.serialize = serialize
 
 
-def options(parser):
-    parser.add_argument("--module", dest="modules", action="append",
-                        default=[],
-                        help="load modules into coqd, more than one "
-                        "can be specified",
-                        )
-    parser.add_argument("--serialize", action="store_true",
-                        default=False,
-                        help="Serialize output to JSON")
-    return parser
-
-
-def main():
+def main(modules, serialize):
     """
     Setup and run coqd
     """
-    parser = ArgumentParser(prog="Coqd", description="Options for Coqd",
-                            version="Coqd 0.1")
-    parser = options(parser)
-    opts = parser.parse_args(argv[2:])
-
     logging.info("Coq is starting... hold on")
-    factory = CoqFactory(opts.modules, opts.serialize)
+    factory = CoqFactory(modules, serialize)
     reactor.listenTCP(8003, factory)
     reactor.run()
+
